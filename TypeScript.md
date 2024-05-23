@@ -1,11 +1,14 @@
 # Thisoe's TypeScript Note
 
-[<< Back to Thisoe's Note](./README.md)
+_[<< Back to Thisoe's Note](./README.md)_
 
-`tsconfig.json` [Official Docs](https://www.typescriptlang.org/tsconfig/)
+> ### Links:
+>
+> - [`tsconfig.json` Docs](https://www.typescriptlang.org/tsconfig/)
+>
+> 
 
-
-# [Mosh](https://youtu.be/d56mG7DezGs)'s Course
+# [Mosh's](https://youtu.be/d56mG7DezGs) Course
 
 ## Recommended `tsconfig` attrs:
   - `noEmitOnError: true,` (Do not emit compiled JS dist files if any errors were reported.)
@@ -41,11 +44,75 @@ let use: [number, string] = [1, 'Thisoe']
 
 ## functions
 ```ts
-function calcTax(income: number): number{
+function calcTax(income:number, taxYear = 2022):number {
+  if(taxYear < 2022)
+    return income*1.2
+  return income*1.3
+}
 
+// Restrict 2 args
+console.log( calcTax(10_0000,2023) )
+```
+
+## obj & `type`
+```ts
+type Employee = {
+  readonly id:number,
+  name:string,
+  retire: (date:Date)=> void
+}
+
+let employee:Employee = {
+  id: 1,
+  name: 'Thisoe',
+  retire:(date:Date)=>{
+    console.log(date)
+  }
 }
 ```
 
+Union types:
+`let weight:number|string`
+```ts
+type Draggable = {
+  drag: ()=>void
+}
 
+type Resizable = {
+  resize: ()=>void
+}
 
-    
+type UIWidget = Draggable & Resizable
+
+let $txt:UIWidget = {
+  drag: _=>{},
+  resize: _=>{}
+}
+```
+
+## optional operators
+
+  1. Optional Chaining
+
+  ```ts
+  obj?.length
+  ```
+
+  2. Optional Element Access
+  ```ts
+  const arr: number[] | null = null
+  const element = arr?.[0]
+  ```
+
+  3. Optional Call
+  ```ts
+  type User = {
+    name?: string
+    greet?: () => void
+  }
+  
+  const user: User = {}
+  user.greet?.()
+  ```
+
+# ...
