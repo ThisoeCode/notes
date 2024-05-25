@@ -8,6 +8,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 >
 > 
 
+
 # [Mosh's](https://youtu.be/d56mG7DezGs) Course
 
 ## Recommended `tsconfig` attrs:
@@ -115,4 +116,90 @@ let $txt:UIWidget = {
   user.greet?.()
   ```
 
-# ...
+
+# [WDS's](https://www.youtube.com/@WebDevSimplified) Course
+
+## Generics
+1. Generic functions
+```ts
+function getFirstElement<ElementType>(array: ElementType[]){
+  return array[0]
+}
+
+const nums = [1,2,3]
+const firstNum = getFirstElement(nums) // " type: number "
+
+const strs = ['a','b']
+const firstNum = getFirstElement(strs) // " type: string "
+```
+
+```ts
+const map = new Map<string, number>()
+map.set('a',1) // " type: string, number "
+
+const map = new Map([['c',3]]) // " type: string, number "
+map.set('a',1)
+
+const map = new Map<string, Map<number,string>>()
+  // " map: <string, Map<number,string>> "
+```
+
+2. Generic Types
+```ts
+type ApiResponse<Data> = {
+  data: Data
+  isError: boolean
+}
+
+// pass in generic here
+const res:ApiResponse<{name:string, age:number}> = {
+  data: {
+    name: "Thisoe",
+    age: 28,
+  },
+  isError: false,
+}
+```
+
+  - Make allies type:
+  ```ts
+  type UserRes = ApiResponse<{name:string, age:number}>
+  type BlogRes = ApiResponse<{title:string, content:string}>
+  const res2:BlogRes = {
+    data: {title: "Thisoe", content: ""},
+    isError: false,
+  }
+  ```
+
+  - Default generic
+  ```ts
+  type ApiResponse<Data={name:string}> = {
+    data: Data
+    err: boolean
+  }
+
+  const res:ApiResponse<number> = {
+    data: 200,
+    isError: false,
+  }
+  ```
+
+  - Adheration (extensions & default)
+  ```ts
+  type ApiResponse<Data extends object = {name:string}> = {
+    data: Data
+    err: boolean
+  }
+
+  type StatusRes = {status: number}
+  const res:StatusRes = {
+    data: {status: 200},
+    isError: false,
+  }
+  ```
+
+
+
+
+
+
