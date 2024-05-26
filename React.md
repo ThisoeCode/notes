@@ -57,7 +57,26 @@ import {MouseEvent} from "react"
 const handleClick = (e:MouseEvent)=>console.log(e)
 ```
 
+## `useState` hook
+```ts
+import {useStare} from 'react'
 
+export default function ListGroup(){
+  const items = ['a','b','c']
+  const [selectedindex,setSelectedIndex] = useState(-1)
+
+  return <>
+    <ul>
+      {items.map((item,index)=>{
+        return <li
+          key={i}
+          onClick={_=>{setSelectedIndex(index)}}
+        ></li>
+      })}
+    </ul>
+  </>
+}
+```
 
 
 
