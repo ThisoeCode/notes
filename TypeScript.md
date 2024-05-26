@@ -33,7 +33,7 @@ _[<< Back to Thisoe's Note](./README.md)_
     
   - `unknown` [See here](#unknown)
   - `never` [See here](#never)
-  - `tuple` [See here](#tuple)
+  - `tuple` [See here](#type-tuple)
 
 ## arrays
 ```ts
@@ -117,7 +117,7 @@ let $txt:UIWidget = {
   ```
 
 
-# [WDS's](https://www.youtube.com/@WebDevSimplified) Course
+# [WDS's](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_z2fqIg50_POJrUkJgBu7g) Course
 
 ## Generics
 1. Generic functions
@@ -199,6 +199,67 @@ const res:ApiResponse<{name:string, age:number}> = {
   ```
 
 
+# [Net Ninja's](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gUgr39Q_yD6v-bSyMwKPUI) Course
+
+## Type `tuple`
+> // TODO Study https://youtu.be/tHSstkiVbc8
+
+
+
+# Other Notes
+
+## Other built-in types
+(Tutorial: [Andrew Burgess](https://youtu.be/kWmUNChlzVw))
+
+### `unknown`
+All possible types are accepted.
+```ts
+let val:unknown = 1
+
+if (typeof val === 'number') val++
+if (typeof val === 'string') val.toUpperCase()
+if (Array.isArray(val)) val.map(val)
+if (
+  val &&
+  typeof cal === 'object' &&
+  'foobar' in val &&
+  typeof val.foobar === 'number'
+) val.foobar = 2
+```
+
+### `never`
+There is no possible type to sign to type `never`.
+```ts
+type A = number & string
+// TS: `A:never`
+```
+```ts
+type User = 'standard'|'admin'|'superadmin'
+
+function login(user:User){
+  switch(user){
+    case 'standard': return true
+    case 'admin': return true
+    // case 'useradmin': return true
+    default: // This will give a type error: `useradmin` cannot be `never`
+      const _unreachable:never = user
+      throw 'wrong user type'
+  }
+}
+```
+
+## Utility Types
+### `Record<Keys, Type>`
+(Tutorial: [Tim Mousk](https://youtu.be/d7EsXK_vBDQ))
+```ts
+type Statuses = 'err'|'suc'
+
+// TS will check if the keys are in `Statuses` type
+const obj:Record<Statuses, string> = {
+  err: '',
+  suc: '',
+}
+```
 
 
 
