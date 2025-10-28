@@ -117,7 +117,7 @@ let $txt:UIWidget = {
   ```
 
 
-# [WDS's](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_z2fqIg50_POJrUkJgBu7g) Course
+# [W.D.S. Kyle's](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_z2fqIg50_POJrUkJgBu7g) Course
 
 ## Generics
 1. Generic functions

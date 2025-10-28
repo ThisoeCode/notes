@@ -1,6 +1,7 @@
 # Menu
 
-[TypeScript.md](./TypeScript.md)
+[TypeScript](./TypeScript.md)
 
-[React.md](./React.md)
+[React](./React.md)
 
+[Embedded C lang with Linux](./Embedded-C.md)

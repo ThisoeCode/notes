@@ -13,7 +13,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 # [Mosh's](https://youtu.be/SqcY0GlETPk) Course
 
 ## "key" prop
-```ts
+```tsx
 const items = ['a','b','c']
 
 return <>
@@ -28,13 +28,13 @@ return <>
 ```
 
 Give list items a unique key so that React can track each of the items.
-```ts
+```tsx
 <li key={item /* item.id */ }>{item}</li>
 ```
 
 ## Type Annotation
 (_Some TypeScript stuff_)
-```ts
+```tsx
 export default function ListGroup(){
   const items = ['a','b','c']
 
@@ -51,14 +51,14 @@ export default function ListGroup(){
 }
 ```
 To fix this TS warning, we should add
-```ts
+```tsx
 import {MouseEvent} from "react"
 // ...
 const handleClick = (e:MouseEvent)=>console.log(e)
 ```
 
 ## `useState` hook
-```ts
+```tsx
 import {useStare} from 'react'
 
 export default function ListGroup(){
