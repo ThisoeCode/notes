@@ -81,7 +81,7 @@ Including Standard Input-Output head file
 ```c
 #include <stdio.h>
 ```
-> The `stdio.h` file is at `/usr/include/` in Linux.
+> In Linux, the `stdio.h` file is at `/usr/include/`.
 
 
 
@@ -90,5 +90,94 @@ Including Standard Input-Output head file
 
 
 ## EP.3 Variables
+
+### `printf` function
+```c
+printf("%d\n", 3);    // 3    (with +-)
+printf("%u\n", 123);  // 123  (without +-)
+printf("%c\n", 'b');  // b
+printf("%f\n", 12.3); // 12.300000
+printf("%X\n", 15);   // F
+printf("%x\n", 15);   // f
+```
+
+### data types
+[wiki](https://en.wikipedia.org/wiki/C_data_types "C data types")
+
+- Integers:
+
+`int`: 4 byte int
+`unsigned int`: 0 ~ 4294967295
+
+`long`: 16 bit (4 byte) int
+`long long`: 64 bit (8 byte) int
+
+- Charactors:
+
+`char`: a 1 byte ASCII
+```c
+printf("%d\n", 97);  // 3
+printf("%u\n", 97);  // a
+```
+
+`unsigned int`: 0 ~ 4294967295
+
+- Decimals:
+
+The storage and calculation method is different from (slower than) int, and even 
+`float`: 4 byte decimal
+`double`
+```c
+printf("%.20f\n", 0.1 + 0.2); // 0.1 + 0.2 = 0.30000000000000004441
+```
+
+### Summary
+```c
+#include <stdio.h>
+
+void main(){
+  int i=1;
+  unsigned int ui=2;
+
+  char c=3;
+  unsigned char uc=4;
+
+  short s=5;
+  unsigned short us=6;
+  long l=7;
+  unsigned long ul=8;
+
+  float f=9.0;
+  double d=11.0;
+
+  long long ll=12;
+  unsigned long long ull=13;
+
+  printf("%d\n",i);
+  printf("%u\n",ui);
+  printf("%d\n",c);
+  printf("%hd\n",uc);
+
+  printf("%d\n",s);
+  printf("%d\n",us);
+  printf("%ld\n",l);
+  printf("%lu\n",ul);
+
+  printf("%f\n",f);
+  printf("%lf\n",d);
+  printf("%lld\n",ll);
+  printf("%llu\n",ull);
+}
+```
+
+"More principles you know, more easy computer science seems." -- OJ Tube
+
+
+
+*******
+
+
+
+## EP.4 
 
 
