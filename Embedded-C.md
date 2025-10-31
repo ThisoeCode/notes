@@ -133,6 +133,7 @@ printf("%.20f\n", 0.1 + 0.2); // 0.1 + 0.2 = 0.30000000000000004441
 
 ### Summary
 ```c
+// data_type.c
 #include <stdio.h>
 
 void main(){
@@ -170,7 +171,7 @@ void main(){
 }
 ```
 
-"More principles you know, more easy computer science seems." -- OJ Tube
+> "More principles you know, more easy computer science seems." -- OJ Tube
 
 
 
@@ -178,6 +179,71 @@ void main(){
 
 
 
-## EP.4 
+## EP.4 Constants
 
+### Cross Compiler
+Programs compiled by `gcc` only runs in Linux CPU, but cannot run in IOT / embedded CPUs; 
+`gdb` can.
 
+> `gdb` is also for:
+> - run debugs
+> - view Assembly src
+
+```bash
+apt-get install gdb
+> y
+```
+
+### Use `gdb`
+
+To prepare the use of `gdb`, add `-g` option to `gcc` which adds debugging information into the executable.
+```bash
+gcc -g data_type.c -o debug.exe
+gdb debug.exe
+
+(gdb) run # runs the exe
+
+(gdb) l # view src code (first 10 lines)
+(gdb) l 20 # view src code (line 15 ~ 24)
+(gdb) l main # view `main` function
+(gdb) # Enter to view 10 more lines
+
+(gdb) b 21 # set a breakpoint at line 21
+(gdb) run # stops at the breakpoint
+# Breakpoint 1, main () at data_types.c:21
+# 21        printf("%d\n",i);
+
+(gdb) p i # view the value of var `i`
+# $1 = 1
+(gdb) p uc
+# $2 = 4 '\004'
+(gdb) p d
+# $3 = 11
+
+(gdb) q # quit
+```
+
+### Understand the "Physics" of Variables
+
+View Assembly code:
+```bash
+(gdb) dsas main
+# Dump  of assembler code for function main:
+#   0x0000555555555149 <+0>:     endbr64
+#   0x0000555555555155 <+12>:    movl   $0x1,-0x34(%rbp)
+#   ...
+```
+
+E.G.
+For `int i = 1;`, the value is `0x1` which is "1", and is stored at physical location `-0x34`.
+⭐ So it's safe to say that variable names stand for physical locations (pointer) under the hood.
+
+> **Bonus** 
+> In C, to print out the location:
+> ```c
+> printf("%p\n", &a);
+> ```
+> - `&` is "address-of operator";
+> - `%p` stands for Pointer datatype.
+
+### Constants
