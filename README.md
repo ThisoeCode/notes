@@ -4,4 +4,4 @@
 
 [React](./React.md)
 
-[Embedded C lang with Linux](./Embedded-C.md)
+[Embedded C with Linux](./Embedded-C.md)

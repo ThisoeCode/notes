@@ -335,10 +335,236 @@ printf("%% 10 : %d", kk%10); // get the last digit => 7
 
 
 
-# Ep.5 
+## Ep.5 Operators
+
+```c
+// Calculating Operators 산술
++
+-
+*
+/
+%
+
+// Assignment
+=
+
+// Logical Operators 논리
+||
+&&
+>
+<
+>=
+<=
+==
+
+// Bit Operators 비트 연산자
+|
+&
+<<
+>>
+^ // XOR
+
+// Ternary Operator 삼항 연산자
+? :
+
+// Funcs
+sizeof()
+```
+
+### Order of Operations
+
+> **It is MUCH BETTER to use `()` in real codes instead of remembering the priority list.**
+> 
+> With `()`, others can better understand your code, and also we get less bugs and much easy to debug.
+
+- 1
+```c
+x++
+x--
+()
+[]
+. // (obj)
+-> // (pointer)
+(type){value}
+```
+<br>
+
+- 2
+```c
+++x
+--x
++x // posite x
+-x // negate x
+! // bool NOT
+~ // bit NOT (flip bit)
+(type)
+*x // (pointer)
+&x // address of `x`
+sizeof()
+```
+<br>
+
+- 3<br>
+`*`<br>
+`/`<br>
+`%`<br>
+
+- 4<br>
+`+`<br>
+`-`<br>
+
+- 5<br>
+`<<`<br>
+`>>`<br>
+
+- 6<br>
+`<`<br>
+`<=`<br>
+`>`<br>
+`>=`<br>
+
+- 7<br>
+`==`<br>
+`!=`<br>
+
+- 8<br>
+`&`<br>
+
+- 9<br>
+`^`<br>
+
+- 10<br>
+`|`<br>
+
+- 11<br>
+`&&`<br>
+
+- 12<br>
+`||`<br>
+
+- 13<br>
+`? :`<br>
+
+- 14
+```c
+=
++=
+-=
+*=
+/=
+%=
+<<=
+>>=
+&=
+^=
+|=
+```
+<br>
+
+- 15<br>
+`,`
+```c
+// E.g.
+int i,j;
+for (i = 0, j = 10; i < j; i++, j--) {
+  printf("%d %d\n", i, j);
+}
+```
+<br>
+
+> `a = falseFunc() && trueFunc()`
+> 
+> `b = trueFunc() || falseFunc()`
+>
+> In these situations, the second part is IGNORED (functions will not run).
+
+### Bit Operators
+
+> Bit operators are a MUST LEARN for embedded programming.
+
+```c
+char a = 8;
+char b = 4;
+char c = 24;
+```
+In this situation:
+- `a` is `0000 1000`
+- `b` is `0000 0100`
+- `b` is `0001 1000`
+
+1. `|`
+```c
+char a = 8;
+char b = 4;
+char c;
+c = a | b; // 12
+
+0000 1000
+ |
+0000 0100
+ =
+0000 1100
+```
+
+2. `&`
+```c
+char a = 8;
+char b = 4;
+char c;
+c = a & b; // 0
+
+0000 1000
+ |
+0000 0100
+ =
+0000 0000
+```
+
+3. `<<`
+```C
+char a = 24;
+char x;
+x = a << 1; // 48
+
+0001 1000
+ <<
+ =
+0011 0000
+```
+
+4. `>>`
+```C
+char a = 24;
+char x;
+x = a >> 1; // 48
+
+0001 1000
+ >>
+ =
+0000 1100
+```
+
+> For **unsigned** or **positive** values:
+> 
+> `b = a << 1;` is equivalent to `b = a * 2;`
+> 
+> `b = a >> 1;` is equivalent to `b = a / 2;`
+> 
+> For the CPU's pov, the `<<` and `>>` operators are MUCH FASTER than `*` and `/`.
+> 
+> > ChatGPT's comment:
+> > "Modern optimizers (like GCC) detect constant powers of two and replace them into bit operation automatically."
+> > "E.g. `b = a / 8;` shifts right by 3 bits."
 
 
 
 *******
+
+
+
+## Ep.6 Bit Operations for Embedded Programming
+
+
+
 
 
