@@ -9,8 +9,19 @@ _[<< Back to Thisoe's Note](./README.md)_
 # Menu
 
 - [2 Linux](#ep2-linux)
+> Bash, Vim, `gcc`
+
 - [3 Variables](#ep3-variables)
-- [4 `gdb` and Constants](#ep4-constants)
+> Data types
+
+- [4 Constants](#ep4-constants)
+> `gdb`, view Assembly code, Calcullating operations
+
+- [5. Operators](#ep5-operators)
+> Priorities, Bit operators
+
+- [6. Bit Operations](#ep6-bit-operations-for-embedded-programming)
+> 
 
 
 
@@ -553,7 +564,9 @@ x = a >> 1; // 48
 > For the CPU's pov, the `<<` and `>>` operators are MUCH FASTER than `*` and `/`.
 > 
 > > ChatGPT's comment:
+> > 
 > > "Modern optimizers (like GCC) detect constant powers of two and replace them into bit operation automatically."
+> > 
 > > "E.g. `b = a / 8;` shifts right by 3 bits."
 
 
@@ -564,6 +577,140 @@ x = a >> 1; // 48
 
 ## Ep.6 Bit Operations for Embedded Programming
 
+### Lit a bulb with `|`
+
+Say we have a chip `a` with 8 pins linked to 8 light bulbs, and has `0x30` as the current value.
+```c
+unsigned char a = 0x30; // 0b00110000
+```
+This means that the 5th & 6th bulbs are on.
+
+Now we want the 4th bulb to lit up. We do:
+```c
+a |= (1 << 3);
+
+// (equivalent to)
+a = a | (1 << 3);
+```
+First, `(1 << 3)` is to move `0b0001` left 3 digits, i.e. `0b0100`.
+
+Then we `|` to `a`:
+```c
+     a = 0b00110000;
+ orVal = 0b00001000;
+result = 0b00111000;
+```
+So as a result of `a |= (1 << 3);`, the 4th bulb is lit and others stay the same.
+
+### "Flipping" Operator `~` (Logical NOT)
+
+```c
+unsigned char x;
+x = 0b00001000;
+x = ~x;
+//x=0b11110111
+```
+
+### Turn off a bulb with `&`
+
+Say now the `a` chip is:
+```c
+unsigned char a = 21; // 0b00010101
+```
+
+Let's turn off the 3rd bulb. We do:
+```c
+a &= ~(1 << 2);
+```
+
+Breakdown:
+
+From `1 << 2` we get `0b00000100`;<br>
+then flip it to get only 3rd one is off;<br>
+finally with `&`:
+```c
+prepare = 0b00000100;
+ andVal = 0b11111011;
+      a = 0b00010101;
+ result = 0b00010001;
+```
+So that we cleared only bit 3, leaving others unchanged.
+
+### `? :` Operator
+```c
+int a = 3;
+int b = 2;
+(a>b) ? printf("yay\n") : printf("nope\n");
+
+// yay
+```
+
+> In C, there is no bool type.
+> 
+> `0` is CONSIDERED AS falsy; all other numbers are truthy.
+
+### `sizeof()`
+```c
+#include <stdio.h>
+
+void main(){
+  int a;
+  char b;
+  double c;
+  int d[5];
+
+  printf("%ld\n",sizeof(a)); // 4 (bytes)
+  printf("%ld\n",sizeof(b)); // 1
+  printf("%ld\n",sizeof(c)); // 8
+  printf("%ld\n",sizeof(d)); // 20
+}
+```
+
+### Type Converting
+```c
+double d = 3.4;
+int i = 2;
+
+printf("%f\n",(d+i)); // 5.400000
+
+printf("%d\n",((int)d+i)); // 5
+```
+
+> ⚠️ **Precautions**
+> 
+> When converting type from different sizes (e.g. `int` and `char`) or different storing method (e.g. `int` and `float`), unexpected value could occur!
+> 
+> E.g.
+> ```c
+> int i = 500;
+> printf("%u\n", (unsigned char)i ); // 244
+> ```
+> `500` is `0001 1111 0100`,
+> but `char` only got 1 byte, only storing `1111 0100` which is `244`.
+
+### Others
+You can do this when init-ing multiple vars:
+```c
+int a=1, b=3, c=9;
+```
+
+> **_btw_**
+> - In Bash, we can also use `&&`.
+> 
+> E.g.
+> ```bash
+> gcc test.c && ./a.out
+> ```
+
+
+
+
+
+*******
+
+
+
+## Ep.7 
 
 
 
