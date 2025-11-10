@@ -8,21 +8,25 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 # Menu
 
-- [2 Linux](#ep2-linux)
-> Bash, Vim, `gcc`
+- 1. Intro
 
-- [3 Variables](#ep3-variables)
+- [2. Linux](#ep2-linux)
+> Bash <br> Vim <br> `gcc`
+
+- [3. Variables](#ep3-variables)
 > Data types
 
-- [4 Constants](#ep4-constants)
-> `gdb`, view Assembly code, Calcullating operations
+- [4. Constants](#ep4-constants)
+> `gdb <br> view Assembly code <br> Calcullating operations
 
 - [5. Operators](#ep5-operators)
-> Priorities, Bit operators
+> Priorities <br> Bit operators
 
 - [6. Bit Operations](#ep6-bit-operations-for-embedded-programming)
-> 
+> Lighting a bulb<br>Type Converting
 
+- [7. `if` `else`, `switch` `case`](#ep7-if-else-switch-case)
+> <br>
 
 
 
@@ -30,7 +34,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 
 
-## EP.2 Linux
+## [EP.2](https://youtu.be/Fzd5MEjXOLE) Linux
 
 ### Linux beginner's bash commands
 ```bash
@@ -113,7 +117,7 @@ Including Standard Input-Output head file
 
 
 
-## EP.3 Variables
+## [EP.3](https://youtu.be/hwW9l0N5QdE) Variables
 
 ### `printf` function
 ```c
@@ -204,7 +208,7 @@ void main(){
 
 
 
-## EP.4 Constants
+## [EP.4](https://youtu.be/ajoQujYfVl0) Constants
 
 ### Cross Compiler
 Programs compiled by `gcc` only runs in Linux CPU, but cannot run in IOT / embedded CPUs; <br>
@@ -346,7 +350,7 @@ printf("%% 10 : %d", kk%10); // get the last digit => 7
 
 
 
-## Ep.5 Operators
+## [Ep.5](https://youtu.be/m_qObdtatVg) Operators
 
 ```c
 // Calculating Operators 산술
@@ -557,8 +561,7 @@ x = a >> 1; // 48
 
 > For **unsigned** or **positive** values:
 > 
-> `b = a << 1;` is equivalent to `b = a * 2;`
-> 
+> `b = a << 1;` is equivalent to `b = a * 2;`<br>
 > `b = a >> 1;` is equivalent to `b = a / 2;`
 > 
 > For the CPU's pov, the `<<` and `>>` operators are MUCH FASTER than `*` and `/`.
@@ -575,7 +578,7 @@ x = a >> 1; // 48
 
 
 
-## Ep.6 Bit Operations for Embedded Programming
+## [Ep.6](https://youtu.be/h4YXQxKcpwI) Bit Operations for Embedded Programming
 
 ### Lit a bulb with `|`
 
@@ -645,8 +648,7 @@ int b = 2;
 // yay
 ```
 
-> In C, there is no bool type.
-> 
+> In C, there is no bool type.<br>
 > `0` is CONSIDERED AS falsy; all other numbers are truthy.
 
 ### `sizeof()`
@@ -676,8 +678,7 @@ printf("%f\n",(d+i)); // 5.400000
 printf("%d\n",((int)d+i)); // 5
 ```
 
-> ⚠️ **Precautions**
-> 
+> ⚠️ **Precautions**<br>
 > When converting type from different sizes (e.g. `int` and `char`) or different storing method (e.g. `int` and `float`), unexpected value could occur!
 > 
 > E.g.
@@ -694,13 +695,97 @@ You can do this when init-ing multiple vars:
 int a=1, b=3, c=9;
 ```
 
-> **_btw_**
-> - In Bash, we can also use `&&`.
+> **_btw_**<br>
+> In Bash, we can also use `&&`.
 > 
 > E.g.
 > ```bash
 > gcc test.c && ./a.out
 > ```
+
+
+
+*******
+
+
+
+## [Ep.7 `if` `else`, `switch` `case`](https://youtu.be/ZFyRHyIXlv4)
+
+### `scanf()`
+
+Bad case:
+```c
+#include <stdio.h>
+int main(){
+  int a;
+  printf("Input: ___\b\b");
+  scanf("%c",&a);
+  printf("Got: %d\n",a);
+  return 0;
+}
+```
+
+We got a `char` but put into an `int`, so the 1 byte data is stored into only the first byte of `int a`. We will get a random value with garbage data printed.
+
+So, *IT'S IMPORTANT TO SET AN INIT VALUE WHEN DECLARING A NEW VAR.* <br>E.g. `int a=0;`
+
+(Correction omitted)
+
+### `if`, `else`
+```c
+#include <stdio.h>
+int main(){
+
+  int a=0;
+
+  if(0){
+    a=1;
+    printf("Inside IF");
+  }
+
+  printf("a: %d\n",a);
+
+  // without curly brackets
+  // not recommended
+  if(9)
+    a=2;
+  else
+    a=9;
+
+  printf("aa: %d\n",a);
+
+  // else if chain
+  if(0){
+    a=3;
+  }else if(!0){
+    a=233;
+  }else if(1){
+    a=123;
+  }else{
+    a=8;
+  }
+
+  printf("aaa: %d\n",a);
+
+  return 0;
+}
+```
+
+> When using `else if` chains, put the most possibly truthy statement on top, and the least at bottom for better program efficiency.
+> ```c
+> if(very_possibly_1){
+>   // ...
+> }else if(half_possibe){
+>   // ...
+> }else if(very_0){
+>   // ...
+> }
+> ```
+
+### `switch`
+```c
+
+```
 
 
 
@@ -710,7 +795,7 @@ int a=1, b=3, c=9;
 
 
 
-## Ep.7 
+## [Ep.8](https://youtu.be/TdzCyRviW7w)
 
 
 
