@@ -8,7 +8,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 # Menu
 
-- 1. Intro
+- 1\. Intro
 
 - [2. Linux](#ep2-linux)
 > Bash <br> Vim <br> `gcc`
@@ -17,7 +17,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 > Data types
 
 - [4. Constants](#ep4-constants)
-> `gdb <br> view Assembly code <br> Calcullating operations
+> `gdb` <br> view Assembly code <br> Calcullating operations
 
 - [5. Operators](#ep5-operators)
 > Priorities <br> Bit operators
@@ -26,8 +26,13 @@ _[<< Back to Thisoe's Note](./README.md)_
 > Lighting a bulb<br>Type Converting
 
 - [7. `if` `else`, `switch` `case`](#ep7-if-else-switch-case)
-> <br>
+> `scanf()`<br>String
 
+- [8. Loops](#ep8-loops)
+> `for`, `while`, `do`...`while`
+
+- [9. Function](#ep9-function)
+> 
 
 
 *******
@@ -784,10 +789,65 @@ int main(){
 
 ### `switch`
 ```c
+#include <stdio.h>
 
+int main(){
+
+  int op=0, a=0;
+  scanf("%d",&op);
+
+  switch(op){
+    case 1:
+    case 2:
+    case 3:
+      a=100;
+      break;
+    case 4:
+      a=4;
+      break;
+    case 5:
+      a=5;
+      break;
+    default:
+      a=99;
+      break;
+  }
+
+  printf("Result: %d\n",a);
+
+  return 0;
+}
 ```
 
+### String
+```c
+char str[9] = "hello";
+printf("%s\n",str);
+```
+This is as same as:
+```c
+char str[9];
+str[0] = 'h';
+str[1] = 'e';
+str[2] = 'l';
+str[3] = 'l';
+str[4] = 'o';
+str[5] = '\0'; // String Terminator
+printf("%s\n",str);
+```
+Physically, string is stored next to each other in order, different than:
+```c
+char ch1 = 'h';
+char ch2 = 'e';
+char ch3 = 'l';
+char ch4 = 'l';
+char ch5 = 'o';
+printf("%c%c%c%c%c\n",ch1,ch2,ch3,ch4,ch5);
+```
 
+> The `'\0'` is a **MUST** to prevent garbage data following after.
+
+> `'\0'` is the same as `0x00` and `(int)0`.
 
 
 
@@ -795,8 +855,97 @@ int main(){
 
 
 
-## [Ep.8](https://youtu.be/TdzCyRviW7w)
+## [Ep.8](https://youtu.be/TdzCyRviW7w) Loops
+
+### While Loop
+Eg.1
+```c
+int a = 10;
+
+while(a){
+  a--;
+  printf("a : %d\n",a);
+}
+```
+
+Eg.2
+```c
+int a = 10, b=3;
+
+while(a>b){
+  a--;
+  printf("a : %d\n",a);
+}
+```
+
+### For Loop
+
+`for(` setInitialIndex `;` condition `;` modifyIndexAfterEachIteration `)`
+```c
+int a;
+for(a=0; a>10; a++){
+>   printf("a : %d\n",a);
+}
+```
+
+> Unformal but works:
+> 
+> `for(` runOnceAtFirst `;` condition `;` Run `)`
+> ```c
+> int a=0;
+> for(;a<9;){
+>   a++;
+>   printf("a : %d\n",a);
+> }
+> ```
+
+> A test:
+> ```c
+> #include <stdio.h>
+> int func0(){
+>   printf("call func1\n");
+>   return 0;
+> }
+> int func1(){
+>   printf("call func2\n");
+>   return 1;
+> }
+> 
+> int main(){
+>   int a;
+>   for(a=0; func0(); func1()){
+>     printf("Inside for");
+>   }
+> }
+> ```
+> - Result:
+> ```
+> call func1
+> ```
+> 
+> **Conclusion**<br>
+> The running order of for loop is:
+> ```c
+> for( 1 ; 2 ; 4){
+>   3;
+> }
+> ```
+> - `1` only runs once at the beginning.
+> - When `2` (condition) is `0`, we get out of the loop without running `3` and `4`.
+
+### Do... While
+```c
+do{
+  // ...
+}while(0);
+```
 
 
+
+*******
+
+
+
+## [Ep.9](https://youtu.be/s7xnTuSb8U8) Function
 
 
