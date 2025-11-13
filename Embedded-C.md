@@ -31,15 +31,16 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [8. Loops](#ep8-loops)
 > `for`, `while`, `do`...`while`
 
-- [9. Function](#ep9-function)
-> 
+- [9. Loops 2, Function](#ep9-function)
+> `continue`, `break`<br>`goto`<br>
+
 
 
 *******
 
 
 
-## [EP.2](https://youtu.be/Fzd5MEjXOLE) Linux
+## [Ep.2](https://youtu.be/Fzd5MEjXOLE) Linux
 
 ### Linux beginner's bash commands
 ```bash
@@ -122,7 +123,7 @@ Including Standard Input-Output head file
 
 
 
-## [EP.3](https://youtu.be/hwW9l0N5QdE) Variables
+## [Ep.3](https://youtu.be/hwW9l0N5QdE) Variables
 
 ### `printf` function
 ```c
@@ -213,7 +214,7 @@ void main(){
 
 
 
-## [EP.4](https://youtu.be/ajoQujYfVl0) Constants
+## [Ep.4](https://youtu.be/ajoQujYfVl0) Constants
 
 ### Cross Compiler
 Programs compiled by `gcc` only runs in Linux CPU, but cannot run in IOT / embedded CPUs; <br>
@@ -855,7 +856,7 @@ printf("%c%c%c%c%c\n",ch1,ch2,ch3,ch4,ch5);
 
 
 
-## [Ep.8](https://youtu.be/TdzCyRviW7w) Loops
+## [Ep.8 Loops](https://youtu.be/TdzCyRviW7w)
 
 ### While Loop
 Eg.1
@@ -888,8 +889,7 @@ for(a=0; a>10; a++){
 }
 ```
 
-> Unformal but works:
-> 
+> Unformal but works:<br>
 > `for(` runOnceAtFirst `;` condition `;` Run `)`
 > ```c
 > int a=0;
@@ -926,7 +926,7 @@ for(a=0; a>10; a++){
 > **Conclusion**<br>
 > The running order of for loop is:
 > ```c
-> for( 1 ; 2 ; 4){
+> for( 1 ; 2 ; 4 ){
 >   3;
 > }
 > ```
@@ -946,6 +946,138 @@ do{
 
 
 
-## [Ep.9](https://youtu.be/s7xnTuSb8U8) Function
+## [Ep.9 Function](https://youtu.be/s7xnTuSb8U8)
+
+### Practice `for` loop
+Multiplication Table
+```c
+for(int i=1;i<=9;i++){
+  printf("\n[%d]\n",i);
+  for(int j=1;j<=20;j++){
+    printf("%d * %d = %d\n",i,j,i*j);
+  }
+}
+```
+
+### `continue`
+In the Multiplication Table above, if we want only the odds as second value:
+```c
+for(int i=1;i<=9;i++){
+  printf("\n[%d]\n",i);
+  for(int j=1;j<=20;j++){
+    if(j % 2 == 0){
+      continue; // Skip to the next iteration
+    }
+    printf("%d * %d = %d\n",i,j,i*j);
+  }
+}
+```
+
+### `break`
+```c
+int isRunning = 1;
+while(1){
+  if(isRunning == 0){
+    printf("User turns off the system.\n");
+    break;
+  }
+  printf("Input 0 to exit: _\b");
+  scanf("%d",&isRunning);
+  getchar();
+  printf("(You inputted '%d')",isRunning);
+}
+```
+
+### `goto`
+The "jump to" keyword.
+> **NOT RECOMMENDED IN REAL CODING**
+```c
+#include <stdio.h>
+int main(){
+
+  printf("START!\n");
+  goto ojw;
+  printf("NEXT!\n");
+  ojw: printf("HI!!!\n");
+  printf("END!\n");
+
+  return 0;
+}
+```
+
+### Functions
+
+The function name is similar with variable / constant names. <br> Functional commands are stored in a block of memory, and the function name is a "pointer" of the starting point of the block's starting address.
+
+```c
+int funcA(float a){
+  // ...
+  return 1;
+}
+```
+- `int`: The return value type.
+- `funcA`: Function name.
+- `float a`: Param, values the function "eats".
+- `// ...`: Program logic.
+- `return`: Values the function "poops".
+
+When the function does not return:
+```c
+void funcA(int b){
+  // ...
+}
+```
+
+E.g.
+```c
+#include <stdio.h>
+
+int sum(int a, int b){
+  int c = 0;
+  c=a+b;
+  return c;
+}
+
+int main(){
+  printf("Start\n");
+
+  int x = sum(1,2);
+
+  printf("%d\n",x);
+
+  return 0;
+}
+```
+
+- Doesn't matter how you place you functions in whatever order.
+- You can pre-define a function just like pre-declaring a var. At compile, prototypes tell the compiler what types to expect when calling.
+```c
+#include <stdio.h>
+
+// Compiler ignores the param name here.
+// This is called the `prototype`.
+int sum(int firstNum, int secondNum);
+
+int main(){
+  printf("Start\n");
+  int x = sum(1,2);
+  printf("%d\n",x);
+  return 0;
+}
+
+int sum(int a, int b){
+  int c = 0;
+  c=a+b;
+  return c;
+}
+```
+
+> In bigger projects, function prototypes are written in a separate header file for better "linking".
+
+
+
+*******
+
+
 
 
