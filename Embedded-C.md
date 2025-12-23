@@ -32,7 +32,12 @@ _[<< Back to Thisoe's Note](./README.md)_
 > `for`, `while`, `do`...`while`
 
 - [9. Loops 2, Function](#ep9-function)
-> `continue`, `break`<br>`goto`<br>
+> `continue`, `break`<br>`goto`<br>Function
+
+- [10. Pointer](#ep10-pointer)
+> Array<br>Pointer datatype and operator
+
+
 
 
 
@@ -1007,7 +1012,9 @@ int main(){
 
 ### Functions
 
-The function name is similar with variable / constant names. <br> Functional commands are stored in a block of memory, and the function name is a "pointer" of the starting point of the block's starting address.
+The function name is similar with variable / constant names. <br>
+Functional commands are stored in a block of memory, and the
+function name is a "pointer" of the starting point of the block's starting address.
 
 ```c
 int funcA(float a){
@@ -1049,7 +1056,7 @@ int main(){
 }
 ```
 
-- Doesn't matter how you place you functions in whatever order.
+- Doesn't matter how you place functions in whatever order.
 - You can pre-define a function just like pre-declaring a var. At compile, prototypes tell the compiler what types to expect when calling.
 ```c
 #include <stdio.h>
@@ -1073,11 +1080,125 @@ int sum(int a, int b){
 ```
 
 > In bigger projects, function prototypes are written in a separate header file for better "linking".
+```c
+#include <stdio.h>
+#include "func.h"
+// main...
+```
+```c
+// func.h
+int sum(int a,int b);
+void call();
+// ...
+```
 
 
 
 *******
 
 
+
+## [Ep.10 Pointer](https://youtu.be/po80VB5prlY)
+
+### Array
+
+To declare an array:
+```c
+// set an array that has a length of 10 items
+int arrA[10];
+```
+> Say `arrA` begins at 0x233 in storage:
+>   |content|size|
+>   |:------|:-----|
+>   |arrA[0]|4 byte|
+>   |arrA[1]|4 byte|
+>   |arrA[2]|4 byte|
+>   | ... | ... |
+>   |arrA[9]|4 byte|
+> - **Physically sticking together** in a row by order;
+> - `int` defines each item's **size**.
+
+Example code
+```c
+#include <stdio.h>
+int main(){
+  int arrA[9];
+  for(int i=0; i<10; i++){
+    arrA[i]=i*2;
+  }
+  for(int i=0; i<10; i++){
+    printf("arr[%d]=%d\n",i,arrA[i]);
+  }
+  return 1;
+}
+```
+(Adds define)
+```c
+#include <stdio.h>
+#define MAX 10000
+int main(){
+  int arrA[MAX];
+  for(int i=0; i<MAX; i++){
+    arrA[i]=i*2;
+    printf("arr[%d]=%d\n",i,arrA[i]);
+  }
+  return 1;
+}
+```
+
+### "Physical" location...?
+
+```c
+int x = arrA;
+printf("\nx = %d\n",x);
+```
+What is `x`? <br>
+When ran multiple times, each time `x` shows a different value.
+That is the **starting location** of the array , i.e. `arrA[0]`.
+
+### Pointer
+
+Pointer stores a value of "physical location".
+
+- To declare a pointer, add `int * pa`;
+- To get the location value of a variable, use `&`;
+- To go to the pointer's location, call `*pa`.
+
+E.g.
+```c
+#include <stdio.h>
+int main(){
+
+  int a;
+  int * pa;
+
+  a=3;
+  printf("1) a = %d\n",a);
+  printf("2) &a = %p\n",&a);
+
+  pa = &a;
+  printf("3) pa = %p\n",pa);
+  printf("4) &pa = %p\n",&pa);
+  printf("5) *pa = %d\n",*pa);
+
+  return 1;
+}
+```
+
+> ### Double pointer
+> ```c
+> int n = 10;
+> int *ptr1 = &n;
+> int **ptr2 = &ptr1;
+> printf("5) **ptr2 = %d\n",**ptr2); // 10
+> ```
+
+**The asterisks are different!**
+
+In `int *pa;`, the `int *` part is ***datatype***;<br>
+In `x = *pa;`, the `*` is an operator.
+
+
+*******
 
 
