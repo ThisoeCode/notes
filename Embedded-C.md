@@ -37,6 +37,12 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [10. Pointer](#ep10-pointer)
 > Array<br>Pointer datatype and operator
 
+- [11. Arrays are Pointers!?](#ep11-arrays-are-pointers)
+> Arrays under the hood (in Assembly)<br>Type of Pointers
+
+- [12. Swap Function: Brief Intro to "Stack"]
+> Register Base Pointer (`rbp`) and Register Stack Pointer (`rsp`)
+
 
 
 
@@ -265,7 +271,7 @@ gdb debug.exe
 
 ### Understand the "Physics" of Variables
 
-View Assembly code:
+View Assembly code using `disas` (disassemble):
 ```bash
 (gdb) disas main
 # Dump  of assembler code for function main:
@@ -310,7 +316,7 @@ When running, the constants are stored in different physical part than variables
 `const` variables cannot be changed.<br>
 Also use `#define` defines contants.<br>
 `#ifdefine` (maybe mention in later Ep.s)<br>
-// TODO: Make a link of `#ifdefine` when mentioned
+// TODO: *Make a link of `#ifdefine` when mentioned*
 
 Difference:<br>
 `const` is an unchangeable var stored in read-only memory;<br>
@@ -593,7 +599,8 @@ x = a >> 1; // 48
 
 ### Lit a bulb with `|`
 
-Say we have a chip `a` with 8 pins linked to 8 light bulbs, and has `0x30` as the current value.
+Say we have a chip `a` with 8 pins linked to 8 light bulbs,
+and has `0x30` as the current value.
 ```c
 unsigned char a = 0x30; // 0b00110000
 ```
@@ -690,7 +697,8 @@ printf("%d\n",((int)d+i)); // 5
 ```
 
 > ⚠️ **Precautions**<br>
-> When converting type from different sizes (e.g. `int` and `char`) or different storing method (e.g. `int` and `float`), unexpected value could occur!
+> When converting type from different sizes (e.g. `int` and `char`)
+> or different storing method (e.g. `int` and `float`), unexpected value could occur!
 > 
 > E.g.
 > ```c
@@ -736,7 +744,8 @@ int main(){
 }
 ```
 
-We got a `char` but put into an `int`, so the 1 byte data is stored into only the first byte of `int a`. We will get a random value with garbage data printed.
+We got a `char` but put into an `int`, so the 1 byte data is stored into only the first byte of `int a`.
+We will get a random value with garbage data printed.
 
 So, *IT'S IMPORTANT TO SET AN INIT VALUE WHEN DECLARING A NEW VAR.* <br>E.g. `int a=0;`
 
@@ -782,7 +791,8 @@ int main(){
 }
 ```
 
-> When using `else if` chains, put the most possibly truthy statement on top, and the least at bottom for better program efficiency.
+> For better program efficiency, when using `else if` chains,
+> put the most possibly truthy statement on top, then the least at bottom.
 > ```c
 > if(very_possibly_1){
 >   // ...
@@ -1057,7 +1067,8 @@ int main(){
 ```
 
 - Doesn't matter how you place functions in whatever order.
-- You can pre-define a function just like pre-declaring a var. At compile, prototypes tell the compiler what types to expect when calling.
+- You can pre-define a function just like pre-declaring a var.
+  At compile, prototypes tell the compiler what types to expect when calling.
 ```c
 #include <stdio.h>
 
@@ -1132,7 +1143,7 @@ int main(){
   return 1;
 }
 ```
-(Adds define)
+(Adds `#define`)
 ```c
 #include <stdio.h>
 #define MAX 10000
@@ -1158,7 +1169,7 @@ That is the **starting location** of the array , i.e. `arrA[0]`.
 
 ### Pointer
 
-Pointer stores a value of "physical location".
+Pointer stores a value of a "physical location".
 
 - To declare a pointer, add `int * pa`;
 - To get the location value of a variable, use `&`;
@@ -1196,9 +1207,257 @@ int main(){
 **The asterisks are different!**
 
 In `int *pa;`, the `int *` part is ***datatype***;<br>
-In `x = *pa;`, the `*` is an operator.
+In `x = *pa;`, the `*` is an operator that sees value as location and traces its value.
+
 
 
 *******
+
+
+
+## [Ep.11 Arrays are Pointers!?](https://youtu.be/nRR0ymmICBo)
+
+### "Physics" of Arrays
+```c
+// arr.c
+#include <stdio.h>
+int main(){
+  int a;
+  int * pa;
+
+  int arr[1];
+
+  pa = &a;
+  *pa = 0x77;
+
+  arr[0]=0x55;
+
+  return 1;
+}
+```
+
+Then compile with debugging mode on:<br>
+`gcc -g arr.c -o array_pointer.out`
+
+See asm. code:<br>
+`gdb array_pointer.out`<br>
+`(gdb)` `disas main`<br>
+We'll get something like
+
+```asm
+# Dump of assembler code for function main:
+   0x0000000000001149 <+0>:     endbr64
+   0x000000000000114d <+4>:     push   %rbp
+   0x000000000000114e <+5>:     mov    %rsp,%rbp
+   0x0000000000001151 <+8>:     sub    $0x20,%rsp
+   0x0000000000001155 <+12>:    mov    %fs:0x28,%rax
+   0x000000000000115e <+21>:    mov    %rax,-0x8(%rbp)
+   0x0000000000001162 <+25>:    xor    %eax,%eax
+   0x0000000000001164 <+27>:    lea    -0x1c(%rbp),%rax
+   0x0000000000001168 <+31>:    mov    %rax,-0x18(%rbp)
+   0x000000000000116c <+35>:    mov    -0x18(%rbp),%rax
+   0x0000000000001170 <+39>:    movl   $0x77,(%rax)
+   0x0000000000001176 <+45>:    movl   $0x55,-0xc(%rbp)
+   0x000000000000117d <+52>:    mov    $0x1,%eax
+   0x0000000000001182 <+57>:    mov    -0x8(%rbp),%rdx
+   0x0000000000001186 <+61>:    sub    %fs:0x28,%rdx
+   0x000000000000118f <+70>:    je     0x1196 <main+77>
+   0x0000000000001191 <+72>:    call   0x1050 <__stack_chk_fail@plt>
+   0x0000000000001196 <+77>:    leave
+   0x0000000000001197 <+78>:    ret
+```
+
+- Find `0x77` - it's at `<+39>`:
+> `$0x77,(%rax)` is the `*pa = 0x77;`;
+
+- The next line (the `<+45>`):
+> `$0x55,-0xc(%rbp)` is the 
+
+- Others:
+> - In `<+27>`:
+> > `-0x1c(%rbp)` is variable `a`;<br>
+> > `%rax` is the temp storage location.
+> 
+> - `<+31>`
+> > This line is the `pa = &a;` line;<br>
+> > The `-0x18(%rbp)` is the location of `pa`.
+
+The moved lines in decimals are:
+```c
+0x1c = 28
+0x18 = 24
+0xc = 12
+```
+
+The `rbp` is the starting point.
+It prepares a "Stack" to store data.<br>
+// TODO *link "Stack" lesson from later episodes*<br>
+Minusing `rbp` is the way it finds location of variables, array e.t.
+```c
+  a == rbp - 28
+ pa == rbp - 24
+arr == rbp - 12
+```
+
+### Use Pointers to get Array Items
+```c
+int arr[5];
+arr[3] = 0x55;
+*(arr+3) = 0x77;
+```
+We can get the asm. code as follows:
+```asm
+# ...
+   0x0000000000001164 <+27>:    movl   $0x55,-0x14(%rbp)
+   0x000000000000116b <+34>:    movl   $0x77,-0x14(%rbp)
+# ...
+```
+
+The Assembly output of `arr[n]` and `*(arr+n)` is the exact same.
+
+### Why Pointers Need Type
+We calculate the pointer of `int` and `char`:
+```c
+// arr2.c
+#include <stdio.h>
+int main(){
+
+  // INT
+  int arrI[5];
+  *(arrI+2) = 0x75;
+  *(arrI+3) = 0x77;
+  *(arrI+4) = 0x78;
+
+  // CHAR
+  char arrC[5];
+  *(arrC+2) = 0x91;
+  *(arrC+3) = 0x92;
+  *(arrC+4) = 0x93;
+
+  return 1;
+}
+```
+... and we got asm.:
+```asm
+# ...
+   0x0000000000001164 <+27>:    movl   $0x75,-0x28(%rbp)
+   0x000000000000116b <+34>:    movl   $0x77,-0x24(%rbp)
+   0x0000000000001172 <+41>:    movl   $0x78,-0x20(%rbp)
+   0x0000000000001179 <+48>:    movb   $0x91,-0xb(%rbp)
+   0x000000000000117d <+52>:    movb   $0x92,-0xa(%rbp)
+   0x0000000000001181 <+56>:    movb   $0x93,-0x9(%rbp)
+# ...
+```
+
+We **increased the pointer by 1** each time,
+but the pointer moved **4 for `int`** but **only 1 for `char`**.
+
+Therefore, `int *` and `float *`... are very different.
+
+### The "Location" of an Array
+
+Unlike variables, the pointer of an array do not take up a place in the memory.
+Compiler takes `&arr[]`
+
+> ChatGPT's comment:
+> 
+> “Array pointer” doesn’t exist. The process is **array-to-pointer decay**.<br>
+> An array **does not store a pointer**;
+> its name (e.g. `arr`) is **just an alias for the memory location of its first element in expressions**.
+
+```c
+int a[10] = {0};
+
+printf("a = %p\n",a);
+// 300457
+
+printf("&a[0] = %p\n",&a[0]);
+// 300457
+
+printf("&a = %p\n",&a);
+// 300457
+```
+
+> ### The Process of Self-Teaching C
+> 
+> As shown above, when we are not sure about something, we can:
+> 1. `printf` and run and see the test result;
+> 2. `gdb` -> `disas` and read the asm. code.
+
+
+
+## EP.12 Swap Function: Brief Intro to "Stack"
+> The work done in the "Stack" can be understood as the principle of "scope" in C.
+
+> **Mr. Oh made some unclear contents and several mistakes, so I did my own research.**
+> This is why I did not link this EP's vod at title.
+> 
+> Here's my juicy results below.
+
+```c
+// swap.c
+#include <stdio.h>
+
+void swap(int * b);
+int main(){
+  int a = 7;
+  printf("a = %d\n", a);
+
+  swap(&a);
+
+  printf("a = %d\n", a);
+
+  return 1;
+}
+
+void swap(int * b){
+  // no use
+  int c;
+  
+  printf("[swap] *b = %d\n", *b);
+  *b = 99;
+  printf("[swap] *b = %d\n", *b);
+}
+```
+
+Result:
+```
+a = 7
+[swap] *b = 7
+[swap] *b = 99
+a = 99
+```
+
+> What's happening under the hood:
+>
+> 1. Before running `main()`, calculate how much memory will be taken.
+> In this case, there was only an `int a`, so 4 bytes.
+> 
+> 2. Prepare 4 bytes of memory space, move the `rbp` (Register Base Pointer), then run `main()`.
+> 
+> 3. When it hits `swap()`, it begin to prepare:
+>   1. Store the info to come back to `main()` into the Stack
+>      (and the `rsp` i.e. the Register Stack Pointer);
+>   2. Calc and prepare memory space for `swap()`
+>      (`b` and `c`: 8 bytes of `int *` + 4 bytes of `int` = 12 bytes)
+>      and "infos" to return to `main()` e.g. the location of main stack;
+>   3. **Move up the `rbp`** as same as where the `rsp` now, then run `swap()`.
+> 
+> 4. When running `swap()`, how did it got `a`'s value:
+> ```
+> STACK (high → low)
+> |----------------|
+> | swap stack     |
+> |   b = &a  ---- |----+
+> |----------------|    |
+> | main stack     |    |
+> |   a = 7   <----+----+
+> |----------------|
+> ```
+> 
+> 5. `*b = 99;` works the same way.
+
+As a result, variables in `main()` is not reachable inside `swap()`.<br>
+But by using pointer param, swap can now modify vars in `main()`.
 
 
