@@ -17,7 +17,7 @@ _[<< Back to Thisoe's Note](./README.md)_
 > Data types
 
 - [4. Constants](#ep4-constants)
-> `gdb` <br> view Assembly code <br> Calcullating operations
+> `gdb` <br> view Assembly code `disas` <br> Calcullating operations
 
 - [5. Operators](#ep5-operators)
 > Priorities <br> Bit operators
@@ -40,10 +40,11 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [11. Arrays are Pointers!?](#ep11-arrays-are-pointers)
 > Arrays under the hood (in Assembly)<br>Type of Pointers
 
-- [12. Swap Function: Brief Intro to "Stack"]
+- [12. Swap Function: Brief Intro to "Stack"](#ep12-swap-function-brief-intro-to-stack)
 > Register Base Pointer (`rbp`) and Register Stack Pointer (`rsp`)
 
-
+- 
+> 
 
 
 
@@ -1121,13 +1122,13 @@ int arrA[10];
 > Say `arrA` begins at 0x233 in storage:
 >   |content|size|
 >   |:------|:-----|
->   |arrA[0]|4 byte|
->   |arrA[1]|4 byte|
->   |arrA[2]|4 byte|
+>   |arrA[0]|4 bytes|
+>   |arrA[1]|4 bytes|
+>   |arrA[2]|4 bytes|
 >   | ... | ... |
->   |arrA[9]|4 byte|
+>   |arrA[9]|4 bytes|
 > - **Physically sticking together** in a row by order;
-> - `int` defines each item's **size**.
+> - Type (`int` in this case) defines each item's **size**.
 
 Example code
 ```c
@@ -1171,9 +1172,9 @@ That is the **starting location** of the array , i.e. `arrA[0]`.
 
 Pointer stores a value of a "physical location".
 
-- To declare a pointer, add `int * pa`;
+- To declare a pointer, write `int * pa`;
 - To get the location value of a variable, use `&`;
-- To go to the pointer's location, call `*pa`.
+- To go to a pointer's location and get its value, call `*pa`.
 
 E.g.
 ```c
@@ -1386,6 +1387,11 @@ printf("&a = %p\n",&a);
 
 
 
+
+*******
+
+
+
 ## EP.12 Swap Function: Brief Intro to "Stack"
 > The work done in the "Stack" can be understood as the principle of "scope" in C.
 
@@ -1436,12 +1442,12 @@ a = 99
 > 2. Prepare 4 bytes of memory space, move the `rbp` (Register Base Pointer), then run `main()`.
 > 
 > 3. When it hits `swap()`, it begin to prepare:
->   1. Store the info to come back to `main()` into the Stack
+>    1. Store the info to come back to `main()` into the Stack
 >      (and the `rsp` i.e. the Register Stack Pointer);
->   2. Calc and prepare memory space for `swap()`
+>    2. Calc and prepare memory space for `swap()`
 >      (`b` and `c`: 8 bytes of `int *` + 4 bytes of `int` = 12 bytes)
 >      and "infos" to return to `main()` e.g. the location of main stack;
->   3. **Move up the `rbp`** as same as where the `rsp` now, then run `swap()`.
+>    3. **Move up the `rbp`** as same as where the `rsp` now, then run `swap()`.
 > 
 > 4. When running `swap()`, how did it got `a`'s value:
 > ```
@@ -1459,5 +1465,43 @@ a = 99
 
 As a result, variables in `main()` is not reachable inside `swap()`.<br>
 But by using pointer param, swap can now modify vars in `main()`.
+
+
+
+*******
+
+
+
+## [EP.13 Practice Arrays and Pointers](https://youtu.be/3MRXEVs0_5o)
+
+```c
+int main(){
+  char str[99]="hello world\n";
+  char * pstr=str;
+
+  while(*(pstr++)){
+    putchar(*pstr);
+  }
+
+  return 1;
+}
+
+  // ello world
+```
+
+> In this example, the while loop could properly stop after `\n` cuz before *garbage datas\**, a `\0` (null character) is placed at the end of the string.<br>
+> So, **when assigning an array with string, remember to give 1 more space for the `\0` of the string.**
+> 
+> > ChatGPT comment: <br>
+> > Init.ing an array with values (**aggregate initialization**) (as above) will make all remaining elements `0` (zero-initialized), so no garbage datas here;<br>
+> > Only when an **uninitialized automatic array** like `char str[99];` will contain garbage data.
+
+# Function Pointers
+
+
+
+*******
+
+
 
 
