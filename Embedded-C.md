@@ -43,8 +43,11 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [12. Swap Function: Brief Intro to "Stack"](#ep12-swap-function-brief-intro-to-stack)
 > Register Base Pointer (`rbp`) and Register Stack Pointer (`rsp`)
 
-- 
-> 
+- [13. Practice](#ep13-practice-arrays-and-pointers)
+> Function Pointers
+
+- [14. Standard Library Functions](#ep14-standard-library-functions)
+> string standard funcs
 
 
 
@@ -1475,6 +1478,7 @@ But by using pointer param, swap can now modify vars in `main()`.
 ## [EP.13 Practice Arrays and Pointers](https://youtu.be/3MRXEVs0_5o)
 
 ```c
+#include <stdio.h>
 int main(){
   char str[99]="hello world\n";
   char * pstr=str;
@@ -1496,7 +1500,43 @@ int main(){
 > > Init.ing an array with values (**aggregate initialization**) (as above) will make all remaining elements `0` (zero-initialized), so no garbage datas here;<br>
 > > Only when an **uninitialized automatic array** like `char str[99];` will contain garbage data.
 
-# Function Pointers
+### Function Pointers
+```c
+#include <stdio.h>
+
+void test(){
+  printf("func test\n");
+}
+
+void test2(){
+  printf("func test 2\n");
+}
+
+int main(){
+  void (*fp)();
+
+  fp = test;
+  fp();
+
+  fp = test2;
+  fp();
+
+  return 1;
+}
+```
+When creating a function, its name (e.g. `test2`) refers to 
+where the starting memory location of `test2`'s functioning commands stored.<br>
+So the `test` (in line `fp = test;`) is a pointer.
+
+> ChatGPT's comment:
+> 
+> Not "refers to the function", but "**decays to a pointer** to the function". 
+> Just like how an array name decays to a pointer to its first element.
+
+```c
+printf("test = %u ; &test = %u\n",test,&test);
+// test = 300457 ; &test = 300457
+```
 
 
 
@@ -1504,4 +1544,32 @@ int main(){
 
 
 
+## [Ep.14](https://youtu.be/LmwycZ393r4) Standard Library Functions
 
+### `string.h`
+
+| Function           | Purpose | Returns         |
+| ------------------ | ------- | --------------- |
+| `strlen(s)`        | length  | number of chars |
+| `strcpy(dst, src)` | copy    | `dst`           |
+| `strcmp(a, b)`     | compare | `<0`, `0`, `>0` |
+
+*(Ep.14 skipped)*
+
+
+
+*******
+
+
+
+## [Ep.15](https://youtu.be/LmwycZ393r4) Struct
+
+### 
+
+
+
+
+
+
+
+*******
