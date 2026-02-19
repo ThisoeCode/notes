@@ -55,9 +55,9 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 
 
-## [Ep.2](https://youtu.be/Fzd5MEjXOLE) Linux
+# [Ep.2](https://youtu.be/Fzd5MEjXOLE) Linux
 
-### Linux beginner's bash commands
+## Linux beginner's bash commands
 ```bash
 sudo xxx  # admin prefix
 su -      # login as root
@@ -77,7 +77,7 @@ rm -rf acme # force remove everything under the dir
 man rm  # help
 ```
 
-### Ubuntu
+## Ubuntu
 ```bash
 apt-get update      # update apps from Ubuntu server store
 
@@ -89,7 +89,7 @@ apt-get install gcc # GCC is the Linux compiler
 gcc # test: if is installed successfully, return `gcc: fatal error: no input files`
 ```
 
-### Vim
+## Vim
 
 Create file if not exist:
 ```bash
@@ -105,7 +105,7 @@ Press `Esc` to exit editing. Then:<br>
 
 Combinations are OK, e.g. `:wq` - save then quit
 
-### gcc
+## gcc
 
 ```bash
 gcc hello.c # compiles and outputs an `a.out` executable
@@ -118,14 +118,14 @@ Full options: `gcc -o &lt;output-file-name&gt; &lt;input&gt;
 > gcc -o test hello.c
 > ```
 
-### viewing files
+## viewing files
 ```bash
 cat hello.c     # returns the file content
 hexdump hello.c # see ASCII code of the file content
 xxd hello.c     # ... a better `hexdump`
 ```
 
-### C
+## C
 Including Standard Input-Output head file
 ```c
 #include <stdio.h>
@@ -138,9 +138,9 @@ Including Standard Input-Output head file
 
 
 
-## [Ep.3](https://youtu.be/hwW9l0N5QdE) Variables
+# [Ep.3](https://youtu.be/hwW9l0N5QdE) Variables
 
-### `printf` function
+## `printf` function
 ```c
 printf("%d\n", 3);    // 3    (with +-)
 printf("%u\n", 123);  // 123  (without +-)
@@ -150,7 +150,7 @@ printf("%X\n", 15);   // F
 printf("%x\n", 15);   // f
 ```
 
-### data types
+## data types
 [wiki](https://en.wikipedia.org/wiki/C_data_types "C data types")
 
 - Integers:
@@ -181,7 +181,7 @@ The storage and calculation method is different from (slower than) int.
 printf("%.20f\n", 0.1 + 0.2); // 0.1 + 0.2 = 0.30000000000000004441
 ```
 
-### Summary
+## Summary
 ```c
 // data_type.c
 #include <stdio.h>
@@ -229,9 +229,9 @@ void main(){
 
 
 
-## [Ep.4](https://youtu.be/ajoQujYfVl0) Constants
+# [Ep.4](https://youtu.be/ajoQujYfVl0) Constants
 
-### Cross Compiler
+## Cross Compiler
 Programs compiled by `gcc` only runs in Linux CPU, but cannot run in IOT / embedded CPUs; <br>
 `gdb` can.
 
@@ -244,7 +244,7 @@ apt-get install gdb
 > y
 ```
 
-### Use `gdb`
+## Use `gdb`
 
 To prepare the use of `gdb`, add `-g` option to `gcc` which adds debugging information into the executable.
 ```bash
@@ -273,7 +273,7 @@ gdb debug.exe
 (gdb) q # quit
 ```
 
-### Understand the "Physics" of Variables
+## Understand the "Physics" of Variables
 
 View Assembly code using `disas` (disassemble):
 ```bash
@@ -296,7 +296,7 @@ For `int i = 1;`, the value is `0x1` which is "1", and is stored at physical loc
 > - `&` is "address-of operator";
 > - `%p` stands for Pointer datatype.
 
-### `sizeof`
+## `sizeof`
 ```c
 #include <stdio.h>
 int main(){
@@ -306,7 +306,7 @@ int main(){
 }
 ```
 
-### Constants
+## Constants
 
 When running, the constants are stored in different physical part than variables in memory.<br>
 **Constants** -- in Text Segment (or Code Segment) i.e. *read only* segment;<br>
@@ -338,7 +338,7 @@ int dogEye = eyeNum;
 int flyEye = EYES; // -> int flyEye = 233;
 ```
 
-### Calcullating & Comparison Operations
+## Calcullating & Comparison Operations
 ```c
 int a = 2 + 3;
 int b = 2 - 1;
@@ -371,7 +371,7 @@ printf("%% 10 : %d", kk%10); // get the last digit => 7
 
 
 
-## [Ep.5](https://youtu.be/m_qObdtatVg) Operators
+# [Ep.5](https://youtu.be/m_qObdtatVg) Operators
 
 ```c
 // Calculating Operators 산술
@@ -407,7 +407,7 @@ printf("%% 10 : %d", kk%10); // get the last digit => 7
 sizeof()
 ```
 
-### Order of Operations
+## Order of Operations
 
 > **It is MUCH BETTER to use `()` in real codes instead of remembering the priority list.**
 > 
@@ -514,7 +514,7 @@ for (i = 0, j = 10; i < j; i++, j--) {
 >
 > In these situations, the second part is IGNORED (functions will not run).
 
-### Bit Operators
+## Bit Operators
 
 > Bit operators are a MUST LEARN for embedded programming.
 
@@ -599,9 +599,9 @@ x = a >> 1; // 48
 
 
 
-## [Ep.6](https://youtu.be/h4YXQxKcpwI) Bit Operations for Embedded Programming
+# [Ep.6](https://youtu.be/h4YXQxKcpwI) Bit Operations for Embedded Programming
 
-### Lit a bulb with `|`
+## Lit a bulb with `|`
 
 Say we have a chip `a` with 8 pins linked to 8 light bulbs,
 and has `0x30` as the current value.
@@ -627,7 +627,7 @@ result = 0b00111000;
 ```
 So as a result of `a |= (1 << 3);`, the 4th bulb is lit and others stay the same.
 
-### "Flipping" Operator `~` (Logical NOT)
+## "Flipping" Operator `~` (Logical NOT)
 
 ```c
 unsigned char x;
@@ -636,7 +636,7 @@ x = ~x;
 //x=0b11110111
 ```
 
-### Turn off a bulb with `&`
+## Turn off a bulb with `&`
 
 Say now the `a` chip is:
 ```c
@@ -661,7 +661,7 @@ prepare = 0b00000100;
 ```
 So that we cleared only bit 3, leaving others unchanged.
 
-### `? :` Operator
+## `? :` Operator
 ```c
 int a = 3;
 int b = 2;
@@ -673,7 +673,7 @@ int b = 2;
 > In C, there is no bool type.<br>
 > `0` is CONSIDERED AS falsy; all other numbers are truthy.
 
-### `sizeof()`
+## `sizeof()`
 ```c
 #include <stdio.h>
 
@@ -690,7 +690,7 @@ void main(){
 }
 ```
 
-### Type Converting
+## Type Converting
 ```c
 double d = 3.4;
 int i = 2;
@@ -712,7 +712,7 @@ printf("%d\n",((int)d+i)); // 5
 > `500` is `0001 1111 0100`,
 > but `char` only got 1 byte, only storing `1111 0100` which is `244`.
 
-### Others
+## Others
 You can do this when init-ing multiple vars:
 ```c
 int a=1, b=3, c=9;
@@ -732,9 +732,9 @@ int a=1, b=3, c=9;
 
 
 
-## [Ep.7 `if` `else`, `switch` `case`](https://youtu.be/ZFyRHyIXlv4)
+# [Ep.7 `if` `else`, `switch` `case`](https://youtu.be/ZFyRHyIXlv4)
 
-### `scanf()`
+## `scanf()`
 
 Bad case:
 ```c
@@ -755,7 +755,7 @@ So, *IT'S IMPORTANT TO SET AN INIT VALUE WHEN DECLARING A NEW VAR.* <br>E.g. `in
 
 (Correction omitted)
 
-### `if`, `else`
+## `if`, `else`
 ```c
 #include <stdio.h>
 int main(){
@@ -807,7 +807,7 @@ int main(){
 > }
 > ```
 
-### `switch`
+## `switch`
 ```c
 #include <stdio.h>
 
@@ -839,7 +839,7 @@ int main(){
 }
 ```
 
-### String
+## String
 ```c
 char str[9] = "hello";
 printf("%s\n",str);
@@ -875,9 +875,9 @@ printf("%c%c%c%c%c\n",ch1,ch2,ch3,ch4,ch5);
 
 
 
-## [Ep.8 Loops](https://youtu.be/TdzCyRviW7w)
+# [Ep.8 Loops](https://youtu.be/TdzCyRviW7w)
 
-### While Loop
+## While Loop
 Eg.1
 ```c
 int a = 10;
@@ -898,7 +898,7 @@ while(a>b){
 }
 ```
 
-### For Loop
+## For Loop
 
 `for(` setInitialIndex `;` condition `;` modifyIndexAfterEachIteration `)`
 ```c
@@ -952,7 +952,7 @@ for(a=0; a>10; a++){
 > - `1` only runs once at the beginning.
 > - When `2` (condition) is `0`, we get out of the loop without running `3` and `4`.
 
-### Do... While
+## Do... While
 ```c
 do{
   // ...
@@ -965,9 +965,9 @@ do{
 
 
 
-## [Ep.9 Function](https://youtu.be/s7xnTuSb8U8)
+# [Ep.9 Function](https://youtu.be/s7xnTuSb8U8)
 
-### Practice `for` loop
+## Practice `for` loop
 Multiplication Table
 ```c
 for(int i=1;i<=9;i++){
@@ -978,7 +978,7 @@ for(int i=1;i<=9;i++){
 }
 ```
 
-### `continue`
+## `continue`
 In the Multiplication Table above, if we want only the odds as second value:
 ```c
 for(int i=1;i<=9;i++){
@@ -992,7 +992,7 @@ for(int i=1;i<=9;i++){
 }
 ```
 
-### `break`
+## `break`
 ```c
 int isRunning = 1;
 while(1){
@@ -1007,7 +1007,7 @@ while(1){
 }
 ```
 
-### `goto`
+## `goto`
 The "jump to" keyword.
 > **NOT RECOMMENDED IN REAL CODING**
 ```c
@@ -1024,7 +1024,7 @@ int main(){
 }
 ```
 
-### Functions
+## Functions
 
 The function name is similar with variable / constant names. <br>
 Functional commands are stored in a block of memory, and the
@@ -1113,9 +1113,9 @@ void call();
 
 
 
-## [Ep.10 Pointer](https://youtu.be/po80VB5prlY)
+# [Ep.10 Pointer](https://youtu.be/po80VB5prlY)
 
-### Array
+## Array
 
 To declare an array:
 ```c
@@ -1161,7 +1161,7 @@ int main(){
 }
 ```
 
-### "Physical" location...?
+## "Physical" location...?
 
 ```c
 int x = arrA;
@@ -1171,7 +1171,7 @@ What is `x`? <br>
 When ran multiple times, each time `x` shows a different value.
 That is the **starting location** of the array , i.e. `arrA[0]`.
 
-### Pointer
+## Pointer
 
 Pointer stores a value of a "physical location".
 
@@ -1219,9 +1219,9 @@ In `x = *pa;`, the `*` is an operator that sees value as location and traces its
 
 
 
-## [Ep.11 Arrays are Pointers!?](https://youtu.be/nRR0ymmICBo)
+# [Ep.11 Arrays are Pointers!?](https://youtu.be/nRR0ymmICBo)
 
-### "Physics" of Arrays
+## "Physics" of Arrays
 ```c
 // arr.c
 #include <stdio.h>
@@ -1303,7 +1303,7 @@ Minusing `rbp` is the way it finds location of variables, array e.t.
 arr == rbp - 12
 ```
 
-### Use Pointers to get Array Items
+## Use Pointers to get Array Items
 ```c
 int arr[5];
 arr[3] = 0x55;
@@ -1319,7 +1319,7 @@ We can get the asm. code as follows:
 
 The Assembly output of `arr[n]` and `*(arr+n)` is the exact same.
 
-### Why Pointers Need Type
+## Why Pointers Need Type
 We calculate the pointer of `int` and `char`:
 ```c
 // arr2.c
@@ -1358,7 +1358,7 @@ but the pointer moved **4 for `int`** but **only 1 for `char`**.
 
 Therefore, `int *` and `float *`... are very different.
 
-### The "Location" of an Array
+## The "Location" of an Array
 
 Unlike variables, the pointer of an array do not take up a place in the memory.
 Compiler takes `&arr[]`
@@ -1395,7 +1395,7 @@ printf("&a = %p\n",&a);
 
 
 
-## EP.12 Swap Function: Brief Intro to "Stack"
+# EP.12 Swap Function: Brief Intro to "Stack"
 > The work done in the "Stack" can be understood as the principle of "scope" in C.
 
 > **Mr. Oh made some unclear contents and several mistakes, so I did my own research.**
@@ -1475,7 +1475,7 @@ But by using pointer param, swap can now modify vars in `main()`.
 
 
 
-## [EP.13 Practice Arrays and Pointers](https://youtu.be/3MRXEVs0_5o)
+# [EP.13 Practice Arrays and Pointers](https://youtu.be/3MRXEVs0_5o)
 
 ```c
 #include <stdio.h>
@@ -1500,7 +1500,7 @@ int main(){
 > > Init.ing an array with values (**aggregate initialization**) (as above) will make all remaining elements `0` (zero-initialized), so no garbage datas here;<br>
 > > Only when an **uninitialized automatic array** like `char str[99];` will contain garbage data.
 
-### Function Pointers
+## Function Pointers
 ```c
 #include <stdio.h>
 
@@ -1544,9 +1544,9 @@ printf("test = %u ; &test = %u\n",test,&test);
 
 
 
-## [Ep.14](https://youtu.be/LmwycZ393r4) Standard Library Functions
+# [Ep.14](https://youtu.be/LmwycZ393r4) Standard Library Functions
 
-### `string.h`
+## `string.h`
 
 | Function           | Purpose | Returns         |
 | ------------------ | ------- | --------------- |
@@ -1562,12 +1562,92 @@ printf("test = %u ; &test = %u\n",test,&test);
 
 
 
-## [Ep.15](https://youtu.be/LmwycZ393r4) Struct
+# [Ep.15](https://youtu.be/LmwycZ393r4) Struct
 
-### 
+## Make a custom type
+`int` (4 byte), `char` (1 byte), `short`, `float` are original types in C that we cannot modify.<br>
+With `struct`, we can create a new type.
+
+E.g.
+```c
+#include <stdio.h>
+#include <string.h>
+
+struct student{
+  int s_id;
+  char name[20];
+};
+
+int main(){
+
+  struct student st1;
+
+  st1.s_id = 10;
+  strcpy(st1.name,"oh ji wan");
+
+  printf("  ID : %d\n",st1.s_id);
+  printf("NAME : %s\n",st1.name);
+
+  printf("struct size: %ld\n", sizeof(struct student)); // 24
+  printf("object size: %ld\n", sizeof(st1)); // 24
+
+  return 0;
+}
+```
+
+## Short struct: `typedef`
+```c
+struct student{
+  int s_id;
+  char name[20];
+};
+
+typedef struct student std;
+
+std st1;
+// ...
+```
+
+... or shorter ...
+
+```c
+typedef struct student{
+  int s_id;
+  char name[20];
+}std;
+
+std st1;
+// ...
+```
+
+## Practice Pointers and Functions with Structures
+```c
+#include <stdio.h>
+#include <string.h>
+
+typedef struct student{
+  int s_id;
+  char name[20];
+}std;
+
+int main(){
+
+  struct student st1;
 
 
+  printf("[main]   ID : %d\n",st1.s_id);
+  printf("[main] NAME : %s\n",st1.name);
 
+  return 0;
+}
+
+void std_func(std * st){
+  st.s_id = 10;
+  strcpy(st.name,"oh ji wan");
+  printf("  ID 1 : %d\n",st1.s_id);
+  printf("NAME 1 : %s\n",st1.name);
+}
+```
 
 
 
