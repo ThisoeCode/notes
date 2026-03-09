@@ -18,7 +18,8 @@ _[<< Back to Thisoe's Note](./README.md)_
   - [Set more pins: LED Blinking](#set-more-pins-led-blinking) `HAL_GPIO_WritePin`
   - [GPIO Input](#gpio-input)
 
-- [8](#)
+- [8. `HAL` Under the Hood](#ep8-hal-under-the-hood)
+  - [Dive into `HAL_Init()`](#trace-hal_init)
 
 
 
@@ -168,7 +169,7 @@ The LED on the board would blink!
 
 Let's use the button to control the LED.
 
-> `PA0` is for the LED `D2`.
+> `PA0` is for the button `S2`.
 
 1. In IOC select `PA0` > `GPIO_Input`.
 2. `System Core` > `GPIO` > `PA0...`<br>
@@ -192,7 +193,7 @@ After generated, in main loop:
 ```
 
 Debug and have a try!
-> Press the `S2` button.
+> Press the `S2` button on the board.
 
 
 
@@ -200,4 +201,94 @@ Debug and have a try!
 
 
 
-# [Ep.8](https://youtu.be/gf-7jy8l2mQ) 
+# [Ep.8](https://youtu.be/gf-7jy8l2mQ) `HAL` Under the Hood
+
+## Trace `HAL_Init()`
+
+We want to know what is happening under the hood when we run `HAL_Init()`.
+
+1. Link the board;
+2. Open the project and trace `HAL_Init()`;
+3. Find the line `__HAL_FLASH_PREFETCH_BUFFER_ENABLE();` and hang a debug pause to it;
+4. Start debugging.
+
+The layout will change to debug UI, with `Live Expression` tab on the right side window.
+We are going to use that tab.
+
+So what is `__HAL_FLASH_PREFETCH_BUFFER_ENABLE()` doing?
+
+> **The hard way:**
+> 
+> Trace:<br>
+> `HAL_Init` > `__HAL_FLASH_PREFETCH_BUFFER_ENABLE` > `(FLASH->ACR |= FLASH_ACR_PRFTBE)`<br>
+> where `FLASH` > `((FLASH_TypeDef *)FLASH_R_BASE)`<br>
+> where `FLASH_R_BASE` is `(AHBPERIPH_BASE + 0X00002000UL)`<br>
+> where `AHBPERIPH_BASE` is `(PERIPH_BASE + 0x00020000UL)`<br>
+> where `PERIPH_BASE` is `0x40000000UL`
+> 
+> > When `Ctrl`+`MouseClick` cannot trace, use `Ctrl`+`H` to search.
+> > > btw. In Linux, the bash for "search keyword under current dir" is:
+> > > ```bash
+> > > grep -rn "FLASH_R_BASE" .
+> > > ```
+> > > `-rn` stands for:<br>
+> > > Search **r**ecursively;<br>
+> > > Show filename + line **n**umber.
+> 
+> Do the math.<br>
+> The result is, `FLASH` is visiting `0x40022000`.
+
+**The easy way:**
+
+1. Use the Expression tab.
+In the "Live Expression" tab, "+ *Add new expression*" and fill in `FLASH`.<br>
+We are getting the `0x40022000`. And this is the location of our Flash.
+
+2. Analyze type of `FLASH`.
+From theexpression table, we also got the type of `FLASH` which is `FLASH_TypeDef *`.
+Now we need to understand this type.<br>
+Trace it and we got
+```c
+typedef struct
+{  // `uint32_t` is 4 byte
+  __IO uint32_t ACR;      // 0x40022000
+  __IO uint32_t KEYR;     // 0x40022004
+  __IO uint32_t OPTKEYR;  // 0x40022008
+  __IO uint32_t SR;       // 0x4002200C
+  __IO uint32_t CR;       // 0x40022010
+  __IO uint32_t AR;       // 0x40022014
+  __IO uint32_t RESERVED; // 0x40022018
+  __IO uint32_t OBR;      // 0x4002201C
+  __IO uint32_t WRPR;     // 0x40022020
+} FLASH_TypeDef;
+```
+This struct names register locations for later easy access.
+> E.g.<br>
+> Search `&(FLASH->OBR)` in Expression tab.<br>
+> We get `0x4002201C` with type `volatile uint32_t *`.
+
+For `__IO`, we also can find `#define __IO volatile`.<br>
+`volatile` stops the compiler to "be lazy" - unable it to ignore re-assignment to the var.<br>
+E.g. We have a GPIO LED and we open (0) and close (1) the light. If we did not "volatile", the whole blinking process won't work because the compiler just assigns the last assigned value to the var.
+
+3. Search expression `FLASH_ACR_PRFTBE`, which is `16`.
+> (Back to "hard way" to see why it's `16`)
+> ```c
+> #define FLASH_ACR_PRFTBE_Pos                (4U)
+> #define FLASH_ACR_PRFTBE_Msk                (0x1UL << FLASH_ACR_PRFTBE_Pos)
+> #define FLASH_ACR_PRFTBE                    FLASH_ACR_PRFTBE_Msk
+> ```
+> So it's just `1 << 4` which is 0x10 (or 16 in decimal).
+
+**Answer**: `__HAL_FLASH_PREFETCH_BUFFER_ENABLE()` is assigning value `16` at `0x40022000`.
+```c
+// I.E.
+volatile unsigned int * reg = 0x40022000
+reg |= 1 << 4;
+```
+
+
+
+
+
+
