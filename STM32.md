@@ -20,7 +20,11 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 - [8. `HAL` Under the Hood](#ep8-hal-under-the-hood)
   - [Dive into `HAL_Init()`](#trace-hal_init)
+  - [Analyze datasheet](#analyze-datasheet)
 
+- [9. Control `GPIO` Manually](#ep9-control-gpio-manually)
+  - 
+  - 
 
 
 *******
@@ -274,11 +278,11 @@ E.g. We have a GPIO LED and we open (0) and close (1) the light. If we did not "
 3. Search expression `FLASH_ACR_PRFTBE`, which is `16`.
 > (Back to "hard way" to see why it's `16`)
 > ```c
-> #define FLASH_ACR_PRFTBE_Pos                (4U)
-> #define FLASH_ACR_PRFTBE_Msk                (0x1UL << FLASH_ACR_PRFTBE_Pos)
-> #define FLASH_ACR_PRFTBE                    FLASH_ACR_PRFTBE_Msk
+> #define FLASH_ACR_PRFTBE_Pos    (4U)
+> #define FLASH_ACR_PRFTBE_Msk    (0x1UL << FLASH_ACR_PRFTBE_Pos)
+> #define FLASH_ACR_PRFTBE        FLASH_ACR_PRFTBE_Msk
 > ```
-> So it's just `1 << 4` which is 0x10 (or 16 in decimal).
+> So it's just doing `1 << 4` which is `0x10` (or `16` in decimal).
 
 **Answer**: `__HAL_FLASH_PREFETCH_BUFFER_ENABLE()` is assigning value `16` at `0x40022000`.
 ```c
@@ -287,6 +291,32 @@ volatile unsigned int * reg = 0x40022000
 reg |= 1 << 4;
 ```
 
+
+## Analyze datasheet
+Open the Reference Manual pdf and `Ctrl`+`F` for "ACR".
+> The FLASH_ACR register is used to enable/disable prefetch and half cycle access, and to control the Flash memory access time according to the CPU frequency. The tables below provide the bit map and bit descriptions for this register.
+> 
+> ...
+> 
+> Flash access control register (FLASH_ACR)
+> | 5      | 4      | 3      | 2       | 1       | 0       |
+> |:------:|--------|--------|---------|---------|---------|
+> | PRFTBS | PRFTBE | HLFCYA | LATENCY | LATENCY | LATENCY |
+> | r      | rw     | rw     | rw      | rw      | rw      |
+> Bit 4 **PRFTBE**: Prefetch buffer status<br>
+> 0: Prefetch disabled<br>
+> 1: Prefetch enabled
+
+We cannot read all the thousand pages of the datasheet.
+So we search through the file for what we need in future developments.
+
+
+
+*******
+
+
+
+# [Ep.9](https://youtu.be/EepQaYWIEMM) Control `GPIO` Manually
 
 
 
