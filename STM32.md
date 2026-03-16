@@ -22,9 +22,11 @@ _[<< Back to Thisoe's Note](./README.md)_
   - [Dive into `HAL_Init()`](#trace-hal_init)
   - [Analyze datasheet](#analyze-datasheet)
 
-- [9. Control `GPIO` Manually](#ep9-control-gpio-manually)
-  - 
-  - 
+- [9. GPIO](#ep9-gpio)
+  - Input and Output
+  - ["Manually" control the pins](#control-gpio-manually): tracking down the GPIO init function
+
+- 10\. Some more "manually" controlling of GPIO
 
 
 *******
@@ -140,8 +142,8 @@ So we need to see the board's pinout diagram sheet.
 2. Go to `System Core` > `GPIO` > `PC13...`<br>
     GPIO output level: High<br>
     GPIO mode: Output Push Pull<br>
-    GPIO Pull: Pull-down<br>
-    Max output speed: High<br>
+    GPIO Pull: No pull...<br>
+    Max output speed: Low<br>
     User Label: `GPIO_LED`<br>
 3. Save.
 
@@ -316,8 +318,158 @@ So we search through the file for what we need in future developments.
 
 
 
-# [Ep.9](https://youtu.be/EepQaYWIEMM) Control `GPIO` Manually
+# [Ep.9](https://youtu.be/EepQaYWIEMM) GPIO
 
+## GPIO Config Options Explained
+
+### GPIO output
+
+- **GPIO output level**
+  The initial status of the output pin.<br>
+  The state you want on the chip starts.
+
+  E.g.<br>
+  High: `+3.3V`<br>
+  Low: `0V`
+
+  > Track down `MX_PGIO_Init()`,
+  > in the config section we can see the 3rd param of `HAL_GPIO_WritePin()` is `GPIO_PIN_SET` (or `GPIO_PIN_RESET`).
+  > 
+  > Track further down:
+  > ```c
+  > /**
+  >   * @brief  GPIO Bit SET and Bit RESET enumeration
+  >   */
+  > typedef enum
+  > {
+  >   GPIO_PIN_RESET = 0u,
+  >   GPIO_PIN_SET
+  > } GPIO_PinState;
+  > ```
+
+
+- **GPIO mode Push Pull**
+  1. **Push-Pull**
+
+    The 2 states are:
+    - connect the pin output with `+3.3V`
+    - connect the pin output with ground
+
+    > There are sometimes also "BJT" and "MOSFET" that works similar with "Push-Pull".
+
+  2. **Open Drain**
+
+    The 2 states are:
+    - float the pin (an open circuit)
+    - connect the pin output with ground (drains voltage from the pin)
+
+
+- **Maximum output speed**
+
+  How fast voltage rise/fall when states changes.
+
+  > ChatGPT comments:
+  > 
+  > For driving an LED, choose Low speed.
+  > - Lower EMI (electromagnetic noise)
+  > - Lower power consumption
+  > - Less signal ringing
+
+
+## GPIO input
+
+### Pull-up mode and Pull-up Resistor
+```
++5V
+ │
+ R
+ │
+ ├── MCU input
+ │
+switch
+ │
+GND
+```
+The `R` (Pull-up Resistor) creates a gentle flow of input to the GPIO input pin.
+
+When the `switch` is closed, the pin goes to 0V.
+
+The resistor also prevents a direct short circuit when switch closed.
+
+
+### Pull-down mode and Pull-down Resistor
+```
++5V
+ │
+switch
+ │
+ ├── MCU input
+ │
+ R
+ │
+GND
+```
+The inverted version of Pull-up.
+
+> Pull-up is often prefered because it's safer.<br>Pull-up performs better in noise and shocks.
+
+
+## Control `GPIO` "Manually"
+
+1. `MX_GPIO_Init()`
+  - `__HAL_RCC_GPIOC_CLK_ENABLE()`
+    - `SET_BIT(REG, BIT)`
+      - `((REG) |= (BIT))`
+    - The `REG`: `RCC->APB2ENR`
+      - Expression: `RCC`	`RCC_TypeDef *`	`0x40021000`
+      - Expression: `&(RCC->APB2ENR)`	`volatile uint32_t *`	`0x40021018`
+    - The `BIT`: `RCC_APB2ENR_IOPCEN`
+      - Expression: `RCC_APB2ENR_IOPCEN`	`unsigned long`	`16`
+      - `RCC_APB2ENR_IOPCEN_Msk`
+        - `(0x1UL << RCC_APB2ENR_IOPCEN_Pos)`
+          - `RCC_APB2ENR_IOPCEN_Pos` is `4U`
+
+          So:
+
+        - `(4)` (`RCC_APB2ENR_IOPCEN_Pos`)
+    - `(1 << 4)` (`RCC_APB2ENR_IOPCEN`)
+  - `*(0x40021018) |= (1 << 4)` (`__HAL_RCC_GPIOC_CLK_ENABLE`)
+
+2. `HAL_GPIO_WritePin()`
+```c
+void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState) {
+  if (PinState != GPIO_PIN_RESET) {
+    GPIOx->BSRR = GPIO_Pin;
+  } else {
+    GPIOx->BSRR = (uint32_t)GPIO_Pin << 16u;
+  }
+}
+```
+  - `GPIO_LED_GPIO_Port`
+    - Expression Value: `0x40011000`
+  - `GPIO_LED_Pin` (`GPIO_PIN_13`)
+    - Expression Value: `8192` or `0b10000000000000` (i.e. `(1 << 13)`)
+  - `GPIO_PIN_SET`
+    - \([enum](#gpio-output)\) `0b1`
+
+  - In datasheet, `GPIOx_BSSR` is "Port bit set/reset register"
+    - `GPIOx` is `0x40011000`
+      - `GPIOx->BSRR` is `0`, so `&(GPIOx->BSRR)` is also `0x40011000`
+
+      So:
+
+  - `if` `PinState` is `0`: `*(0x40011000) = (1 << 13);`
+  - `else`: `*(0x40011000) = ((1 << 13) << 16);`
+
+  > The reason why it `<< 16`:
+  > 
+  > We can find the Port "Bit Set/Reset Register" (BSSR) table in the datasheet.<br>
+  > 0 ~ 15 are the `BSn` (E.g. `BS13`) or "Bit Set" for the pins,
+  > and 16 ~ 31 are `BRn` ("Bit Reset") for the pins.
+
+
+
+*******
 
 
 
