@@ -26,7 +26,13 @@ _[<< Back to Thisoe's Note](./README.md)_
   - Input and Output
   - ["Manually" control the pins](#control-gpio-manually): tracking down the GPIO init function
 
-- 10\. Some more "manually" controlling of GPIO
+- [10. Some more "manually" controlling of GPIO](#ep10-gpio-ep2)
+  - [MODIFY_REG](#example): How to change one bit of data in a register & What is a "mask"
+
+- 11\.
+
+
+
 
 
 *******
@@ -305,6 +311,7 @@ Open the Reference Manual pdf and `Ctrl`+`F` for "ACR".
 > |:------:|--------|--------|---------|---------|---------|
 > | PRFTBS | PRFTBE | HLFCYA | LATENCY | LATENCY | LATENCY |
 > | r      | rw     | rw     | rw      | rw      | rw      |
+> 
 > Bit 4 **PRFTBE**: Prefetch buffer status<br>
 > 0: Prefetch disabled<br>
 > 1: Prefetch enabled
@@ -318,7 +325,7 @@ So we search through the file for what we need in future developments.
 
 
 
-# [Ep.9](https://youtu.be/EepQaYWIEMM) GPIO
+# [Ep.9](https://youtu.be/EepQaYWIEMM) GPIO (Ep.1)
 
 ## GPIO Config Options Explained
 
@@ -446,9 +453,9 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
 }
 ```
   - `GPIO_LED_GPIO_Port`
-    - Expression Value: `0x40011000`
+    - Expression (Value): `0x40011000`
   - `GPIO_LED_Pin` (`GPIO_PIN_13`)
-    - Expression Value: `8192` or `0b10000000000000` (i.e. `(1 << 13)`)
+    - Expression (Value): `8192` or `0b10000000000000` (i.e. `(1 << 13)`)
   - `GPIO_PIN_SET`
     - \([enum](#gpio-output)\) `0b1`
 
@@ -472,5 +479,67 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
 *******
 
 
+
+# [Ep.10](https://youtu.be/n5yUMV3fJuM) GPIO (Ep.2)
+
+## What is `assert_param`
+
+`assert_param()` is test-stage alert after some kind of validation after setting vars.<br>
+E.g. `assert_param(IS_GPIO_PIN(GPIO_Init->Pin));`
+
+## `MODIFY_REG`: How to change one bit of data & What is a "mask"
+
+The `MODIFY_REG()` expects 3 params: `REG`, `CLEARMASK` and `SETMASK`.
+
+`REG` is the address of the register that needs modification;<br>
+`CLEARMASK` indicates the position where we want to modify;<br>
+`SETMASK` is the value we are going to assign to those bit(s).
+
+### Example
+
+> **GOAL:**<br>
+> Say GPIO Pin 13 is at the 3rd and 4th bit of register `REG`.<br>
+> Now I want to change the value at Pin 13 into `01`.<br>
+> Assume REG is currently storing `1111 0001`.
+
+1. Get the whole 8 bit of data from the REG...
+    - Pass `(*configregister)` (i.e. `1111 0001`) to param `REG`.
+
+2. Clear up the bits that we are going to modify, while keeping other bits untouched...
+
+    The `CLEARMASK` mask should be `0011 0000`,
+    indicating it's the 3rd and 4th bit that we are going to clear (i.e. set to `0`).
+    ```c
+    WRITE_REG(REG,(((READ_REG(REG)) & (~(CLEARMASK))) | (SETMASK)));
+    ```
+    - The left part of `|`:
+      - `READ_REG(REG)` is just returning `(REG)`;
+      > So `((READ_REG(REG)) & (~(CLEARMASK)))`<br>
+      > => `1111 0001` `&` `0011 0000`<br>
+      > => `1100 0001`
+
+3. Next we put needed data in place using `SETMASK` mask...
+    - Now calculate the `|`:
+      > `1100 0001` `|` `CLEARMASK`
+      >   - `(config << registeroffset)` is passed to `CLEARMASK`
+      >   > Say `config` is `3`;<br>
+      >   > `registeroffset` is `13` since we are doing Pin 13;<br>
+      >   > Ending up `3 << 13`<br>
+      >   > => `0000 0010` move 13 bits => 8192
+      >   > (but in this example we assume the result is `0001 0000`).
+      > => `1100 0001` `|` `0001 0000`
+      > => `1101 0001`
+
+4. Write the result to the register...
+    `WRITE_REG(REG, VAL)` i.e. `((REG) = (VAL))`
+    => `(*configregister)` `=` `1101 0001`
+
+
+
+*******
+
+
+
+# [Ep.11](https://youtu.be/1YpiCnHQb3k) 
 
 
