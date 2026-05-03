@@ -30,6 +30,8 @@ _[<< Back to Thisoe's Note](./README.md)_
   - [MODIFY_REG](#example): How to change one bit of data in a register & What is a "mask"
 
 - 11\.
+  - [First 10 eps' summary](#summary-of-first-10-ep)
+  - [Wiring real stuff](#wiring-real-stuff)
 
 
 
@@ -259,7 +261,8 @@ We are getting the `0x40022000`. And this is the location of our Flash.
 2. Analyze type of `FLASH`.
 From theexpression table, we also got the type of `FLASH` which is `FLASH_TypeDef *`.
 Now we need to understand this type.<br>
-Trace it and we got
+Trace it and we got:
+### GPIOx structure
 ```c
 typedef struct
 {  // `uint32_t` is 4 byte
@@ -274,6 +277,8 @@ typedef struct
   __IO uint32_t WRPR;     // 0x40022020
 } FLASH_TypeDef;
 ```
+> See datasheet Table 59. "GPIO register map and reset values".
+
 This struct names register locations for later easy access.
 > E.g.<br>
 > Search `&(FLASH->OBR)` in Expression tab.<br>
@@ -535,6 +540,28 @@ The `MODIFY_REG()` expects 3 params: `REG`, `CLEARMASK` and `SETMASK`.
     => `(*configregister)` `=` `1101 0001`
 
 
+> As a result,
+> ```c
+> GPIO_InitTypeDef GPIO_InitStruct = {0};
+> GPIO_InitStruct.Pin = LED_D2_Pin;
+> GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+> GPIO_InitStruct.Pull = GPIO_NOPULL;
+> GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+> HAL_GPIO_Init(LED_D2_GPIO_Port, &GPIO_InitStruct);
+> ```
+> is equivalent to:
+> ```c
+> volatile unsigned int *reg2 = 0x40011004;
+> *reg2 = (*reg2 & ~(15UL << 20U)) | (3U << 20U);
+> ```
+
+## Summary
+In embedded programming, before we start coding, we must know:
+1. What is GPIO (General Purpose Input Output)? How we use them? Where can we use them?
+2. In a specific chip, how to control using GPIO?
+3. How GPIO were written in plain code?
+
+
 
 *******
 
@@ -542,4 +569,19 @@ The `MODIFY_REG()` expects 3 params: `REG`, `CLEARMASK` and `SETMASK`.
 
 # [Ep.11](https://youtu.be/1YpiCnHQb3k) 
 
+## Summary of First 10 Ep
+
+1. Power source: 3V3
+
+2. Startup code: the todos before running main function (`/Core/Startup/startup_stm32f103c8tx.s `)
+    Initting HAL, clocks, and GPIO.
+
+> ### Sleep mode
+> Clocks are power consumers.<br>
+> To save power, we disable clocks (sleep) when say we use batteries.
+
+3. Main loop: blinking the LED (controlling `GPIOx_BSRR` i.e. Bit Set/Reset Register)
+    Read/Write of pins
+
+## Wiring Real Stuff
 
