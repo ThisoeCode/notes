@@ -29,9 +29,12 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [10. Some more "manually" controlling of GPIO](#ep10-gpio-ep2)
   - [MODIFY_REG](#example): How to change one bit of data in a register & What is a "mask"
 
-- 11\.
+- 11\. Summary
   - [First 10 eps' summary](#summary-of-first-10-ep)
-  - [Wiring real stuff](#wiring-real-stuff)
+  - [Intro of Hardwares](#intro-of-hardwares)
+
+- [12\. Circuit Diagram](#ep12-circuit-diagram)
+
 
 
 
@@ -277,7 +280,7 @@ typedef struct
   __IO uint32_t WRPR;     // 0x40022020
 } FLASH_TypeDef;
 ```
-> See datasheet Table 59. "GPIO register map and reset values".
+> See reference manual Table 59. "GPIO register map and reset values".
 
 This struct names register locations for later easy access.
 > E.g.<br>
@@ -321,7 +324,7 @@ Open the Reference Manual pdf and `Ctrl`+`F` for "ACR".
 > 0: Prefetch disabled<br>
 > 1: Prefetch enabled
 
-We cannot read all the thousand pages of the datasheet.
+We cannot read all the thousand pages of the reference manual datasheet.
 So we search through the file for what we need in future developments.
 
 
@@ -464,7 +467,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
   - `GPIO_PIN_SET`
     - \([enum](#gpio-output)\) `0b1`
 
-  - In datasheet, `GPIOx_BSSR` is "Port bit set/reset register"
+  - In manual, `GPIOx_BSSR` is "Port bit set/reset register"
     - `GPIOx` is `0x40011000`
       - `GPIOx->BSRR` is `0`, so `&(GPIOx->BSRR)` is also `0x40011000`
 
@@ -475,7 +478,7 @@ void HAL_GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState Pin
 
   > The reason why it `<< 16`:
   > 
-  > We can find the Port "Bit Set/Reset Register" (BSSR) table in the datasheet.<br>
+  > We can find the Port "Bit Set/Reset Register" (BSSR) table in the manual.<br>
   > 0 ~ 15 are the `BSn` (E.g. `BS13`) or "Bit Set" for the pins,
   > and 16 ~ 31 are `BRn` ("Bit Reset") for the pins.
 
@@ -567,7 +570,7 @@ In embedded programming, before we start coding, we must know:
 
 
 
-# [Ep.11](https://youtu.be/1YpiCnHQb3k) 
+# [Ep.11](https://youtu.be/1YpiCnHQb3k) Summary & Wiring
 
 ## Summary of First 10 Ep
 
@@ -583,5 +586,81 @@ In embedded programming, before we start coding, we must know:
 3. Main loop: blinking the LED (controlling `GPIOx_BSRR` i.e. Bit Set/Reset Register)
     Read/Write of pins
 
-## Wiring Real Stuff
+## Intro of Hardwares
+
+- jumper (wires)
+- breadboard
+- FND Module (the 7seg 4 digit number display)
+
+- multimeter
+
+> You can use a multimeter for a short test
+> from chip outlet to the pin of board,
+> to debug if they are connected.<br>
+> This is one of the very basic knowledge of debugging.
+
+
+
+*******
+
+
+
+# [Ep.12](https://youtu.be/WmsqsgJbyFA) Circuit Diagram
+
+## Learnig Goal
+
+From reading diagram, you should...
+
+1. at least recognise which hardwares are needed, and find the "right thing";
+
+2. be able to find elements drawn on datasheet diagram on the board;
+
+3. know how the result will be like when the circuit is working fine,
+and when something went wrong, have the realization of the problem
+(e.g. how much voltage is in expected range).
+
+> Learn how to ask for help from a hardware professionals.
+
+You also should able to use multimeter for tests.
+
+## Basics Hardwares
+
+### 1. Power source & Ground
+`3V3`<br>`⏚`
+
+In diagram, they can act like the seperaters of different parts,
+just like functions in programming.
+
+### 2. Resistance
+- Pull-up
+- Current control
+- Debugging helper (cus they create nodes in diagram)
+
+### 3. Capacitor
+- Voltage smoothing
+- Energy storage
+
+### 4. Coil
+- Stablize current flow
+- DC DC converter
+
+### 5. Diode (二极管)
+- Single direction
+
+### 6. Transistor
+- Build logical gates
+
+### Others
+- Switches
+- Batteries
+- AC power src
+- AC Relay
+
+
+
+*******
+
+
+
+# [Ep.13](https://youtu.be/WmsqsgJbyFA) Circuit Diagram
 
