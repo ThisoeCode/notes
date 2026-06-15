@@ -2,7 +2,8 @@
 
 _[<< Back to Thisoe's Note](./README.md)_
 
-- Course from [OJ Tube](https://www.youtube.com/playlist?list=PLz--ENLG_8TNjRg1OtyFBvUyV4PHaKwmu OJ Tube - 임베디드 실시간 강의) (lang: KR)
+- Course from [OJ Tube](https://www.youtube.com/playlist?list=PLz--ENLG_8TNjRg1OtyFBvUyV4PHaKwmu OJ Tube - 임베디드 실시간 강의) 
+(lang: KR)
 
 *******
 
@@ -31,12 +32,15 @@ _[<< Back to Thisoe's Note](./README.md)_
 
 - 11\. Summary
   - [First 10 eps' summary](#summary-of-first-10-ep)
-  - [Intro of Hardwares](#intro-of-hardwares)
+  - [Intro of Hardwares](#intro-to-hardwares)
 
 - [12\. Circuit Diagram](#ep12-circuit-diagram)
+  - [Basics Hardwares](#basics-hardwares)
 
+- [13\. Learn to Read Datasheet](#ep13-reading-datasheet)
+  - [What is "Serial Interface"](#what-is-spi)
 
-
+- [14\.]
 
 
 
@@ -69,7 +73,8 @@ Say we are gonna code an STM32F103C8T6
 
 3. In `MCU/MPU Selector`, simply check `Core` > `Arm Cortex-M3`
 
-> OR at `Series` check `STM32F1`, and in the `MCUs/MPUs List` scroll down to `STM32F103...` series and find `...C8`. <br>
+> OR at `Series` check `STM32F1`,
+> and in the `MCUs/MPUs List` scroll down to `STM32F103...` series and find `...C8`. <br>
 > We can see its "Package" is `LQFP48`, which means how the chip and its pins look like.
 > > The `48` means number of pins. There's also `LQFP100` with a hundred pins.
 > `LQFP48` has 64 kB flash mem and 20 kB RAM.
@@ -289,7 +294,9 @@ This struct names register locations for later easy access.
 
 For `__IO`, we also can find `#define __IO volatile`.<br>
 `volatile` stops the compiler to "be lazy" - unable it to ignore re-assignment to the var.<br>
-E.g. We have a GPIO LED and we open (0) and close (1) the light. If we did not "volatile", the whole blinking process won't work because the compiler just assigns the last assigned value to the var.
+E.g. We have a GPIO LED and we open (0) and close (1) the light. If we did not "volatile",
+the whole blinking process won't work
+because the compiler just assigns the last assigned value to the var.
 
 3. Search expression `FLASH_ACR_PRFTBE`, which is `16`.
 > (Back to "hard way" to see why it's `16`)
@@ -310,7 +317,9 @@ reg |= 1 << 4;
 
 ## Analyze datasheet
 Open the Reference Manual pdf and `Ctrl`+`F` for "ACR".
-> The FLASH_ACR register is used to enable/disable prefetch and half cycle access, and to control the Flash memory access time according to the CPU frequency. The tables below provide the bit map and bit descriptions for this register.
+> The FLASH_ACR register is used to enable/disable prefetch and half cycle access,
+> and to control the Flash memory access time according to the CPU frequency.
+> The tables below provide the bit map and bit descriptions for this register.
 > 
 > ...
 > 
@@ -347,8 +356,8 @@ So we search through the file for what we need in future developments.
   High: `+3.3V`<br>
   Low: `0V`
 
-  > Track down `MX_PGIO_Init()`,
-  > in the config section we can see the 3rd param of `HAL_GPIO_WritePin()` is `GPIO_PIN_SET` (or `GPIO_PIN_RESET`).
+  > Track down `MX_PGIO_Init()`. In the config section, 
+  > we can see the 3rd param of `HAL_GPIO_WritePin()` is `GPIO_PIN_SET` (or `GPIO_PIN_RESET`).
   > 
   > Track further down:
   > ```c
@@ -426,7 +435,8 @@ GND
 ```
 The inverted version of Pull-up.
 
-> Pull-up is often prefered because it's safer.<br>Pull-up performs better in noise and shocks.
+> Pull-up is often prefered because it's safer.<br>
+> Pull-up performs better in noise and shocks.
 
 
 ## Control `GPIO` "Manually"
@@ -559,8 +569,9 @@ The `MODIFY_REG()` expects 3 params: `REG`, `CLEARMASK` and `SETMASK`.
 > ```
 
 ## Summary
-In embedded programming, before we start coding, we must know:
-1. What is GPIO (General Purpose Input Output)? How we use them? Where can we use them?
+In embedded programming, before we start coding, we must be able to answer:
+1. What is GPIO (General Purpose Input Output)?
+How we use them? Where can we use them?
 2. In a specific chip, how to control using GPIO?
 3. How GPIO were written in plain code?
 
@@ -577,6 +588,7 @@ In embedded programming, before we start coding, we must know:
 1. Power source: 3V3
 
 2. Startup code: the todos before running main function (`/Core/Startup/startup_stm32f103c8tx.s `)
+
     Initting HAL, clocks, and GPIO.
 
 > ### Sleep mode
@@ -584,9 +596,10 @@ In embedded programming, before we start coding, we must know:
 > To save power, we disable clocks (sleep) when say we use batteries.
 
 3. Main loop: blinking the LED (controlling `GPIOx_BSRR` i.e. Bit Set/Reset Register)
+
     Read/Write of pins
 
-## Intro of Hardwares
+## Intro to Hardwares
 
 - jumper (wires)
 - breadboard
@@ -662,5 +675,61 @@ just like functions in programming.
 
 
 
-# [Ep.13](https://youtu.be/WmsqsgJbyFA) Circuit Diagram
+# [Ep.13](https://youtu.be/tWwiC0zxbvI) Reading Datasheet
 
+Mr. OJ read a datasheet of `SND-620` and `IK2102`,
+a 7-seg display and its driver IC.
+
+- Guess the functionality of the board, and where in our project will it serve
+    - It's an LED number displayer
+    - We are using it to display temperature
+
+
+- Quickly go through general discription and feature paragraphs,
+give circuit diagram a glance, and guess approx principle on how it works
+
+- Only master how to correctly use the pins we require
+
+> ## How chips communicate with each other
+> 1. uart
+> 2. rs232, rs485
+> 3. SPI
+> 4. i2c
+> 5. TCP, UDP
+> 6. CAN (rare)
+> 
+> > **ChatGPT comments:**
+> > 
+> >     These are not all the same kind of thing:<br>
+> >     - UART, SPI, I²C, CAN are communication buses/interfaces.
+> >     - RS-232 and RS-485 are mainly electrical standards (physical layers).
+> >     - TCP and UDP are transport protocols that run on top of IP.
+> 
+> ### What is `SPI`
+> Serial Interface looks like this:
+> ```bat
+> MCU | Driver
+> ---   ------
+> STB | 1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0 (1) |
+> DIO |         -b0   -b1   -b2   -b3   -b4   -b5   -b6   -b7       |
+> CLK | 1  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  1  1  |
+> (n) |          1     2     3     4     5     6     7     8        |
+> ```
+> > `STB` stands for "strobe" (Mr. OJ thought it might stands for "Standby").<br>
+> > It tells the driver IC when incoming serial data is valid.<br>
+> > In some other ICs, the same pin might labeled as `SYS`.
+> 
+> Say you want to send "10" (`00001010`), you shall output high on `b4` and `b6`.
+
+Now that we know which communication protocol `IK2102` uses,
+we need to find the **commands**, i.e. how it encodes the data into segment pattern.
+
+For the `IK2102` datasheet, this content is at "Commands" under "FUNCTIONAL DESCRIPTION" chapter.
+
+
+
+*******
+
+
+
+#[Ep.14]()
