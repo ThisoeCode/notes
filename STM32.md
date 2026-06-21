@@ -40,7 +40,12 @@ _[<< Back to Thisoe's Note](./README.md)_
 - [13\. Learn to Read Datasheet](#ep13-reading-datasheet)
   - [What is "Serial Interface"](#what-is-spi)
 
-- [14\.]
+- [14\. Read STM32F103's Datasheet](#ep14-read-stm32f103s-datasheet-as-an-embedded-software-programmer)
+  - [What is Flash & SRAM](#memory)
+  - [Clock hardware](#clock)
+  - [About ADC](#adc)
+
+- 15 ~ 16\. How to use Multimeter & Oscilloscope
 
 
 
@@ -732,4 +737,133 @@ For the `IK2102` datasheet, this content is at "Commands" under "FUNCTIONAL DESC
 
 
 
-#[Ep.14]()
+# [Ep.14](https://youtu.be/AnSYv01-1Tc) Read STM32F103's Datasheet as an Embedded Software Programmer
+
+## Fetch Info from the Title
+
+> **STM32F103x8**<br>**STM32F103xB**
+> 
+> **Medium-density performance line ARM-based 32-bit MCU with 64 or 128 KB Flash, USB, CAN, 7 timers, 2 ADCs, 9 com. interfaces**
+
+- "Medium-density performance line ARM-based" is something like "Samsung Galaxy S25 with Good Cameras" XD
+
+- "32-bit MCU" means:
+  - Buses between CPU, memory, flash... are often 32 lines;
+  - CPU word size and Arithmetic Logic Unit is 32 bits;
+  - General-purpose registers are 32 bits;
+  - Memory access unit can load 32-bit words efficiently...
+
+- "64 or 128 KB Flash": `STM32F103x8` is 64 KB, `STM32F103x` is 128.
+
+- Supports USB and CAN
+
+- Has 7 independent timer peripherals
+
+- "ADC" is Analog-to-Digital Converter (physical signal to "Zeros and Ones")
+
+- "9 com. interfaces": communication interfaces e.g. USB, i2c, usart, CAN...
+
+
+## Features
+
+### Speed
+"72MHz maximum frequency": CPU works up to 603,979,776 clock ticks per second.
+
+### Dhrystone
+"1.25 DMIPS/MHz" is **Dhrystone Million Instruction Per Second**.
+
+Dhrystone is a specific task for computers to process.
+It measures the number of times a specific code loop executes per unit time,
+or in this case, unit clock tick (per MHz).
+
+### Memory
+"64 or 128 Kbytes of Flash memory": Storage. Where source code lives.
+
+"20 Kbytes of SRAM" i.e. **Static RAM**:
+The memory to store processing 
+variables, stack (function params, local vars and return addr), buffers etc.<br>
+SRAM dies after power is cut off.
+
+### Resest & Supply Management
+"POR, PDR, and PVD" is foundational power supply supervisor
+to ensure stable and predictable system states during startup and shutdown.
+
+- POR: Power-On Reset
+- PDR: Power-Down Reset
+- PVD: Programmable Voltage Detector: Detect voltage of the power source (e.g. battery percentage).
+
+### Clock
+"4-to-16 MHz crystal oscillator" is the **external** clock.
+
+"internal 8 MHz factory-trimmed RCC; internal 40 kHz RC" are **internal** clocks.
+
+"PLL for CPU clock": (Phase-Locked Loop) the tick booster of clock.
+
+"32kHz oscillator for RTC"(Real Time Clock): mesures time irl.
+
+### Low-power
+Supports "Sleep, Stop and Standby modes".
+
+### ADC
+"**2 x 12-bit, 1 μs** Analog-to-Digital Converter"<br>
+"Conversion range: **0 to 3.6 V**"
+
+> Say at the moment, the incomming voltage is 2.2 V.
+> 
+> `2^12 * (2.2/3.6)`<br>
+> Explain: 12-bit is the resolution (해상도/分辨率) of the ADC, which is 2^12 = 4096.
+> Split the 3.6 V (the max value of conversion range) into 4096 pieces, to represent the voltage.
+> 
+> `= 2503`<br> As a result, the analog is digitalized as 2503.
+
+"1 μs" is the conversion time. That is 1,000,000 samples/s.
+
+"Temperature sensor" is built-in.
+
+### DMA
+Direct Memory Access. It's a dedicated hardware, a bus master.<br>
+I.E. transfers data directly between peripherals and memory without CPU intervention.
+
+"Peripherals supported: timers, ADC, SPIs, I2Cs and  USARTs".
+
+### I/O Ports
+- "26/51/80 I/Os"
+- "mappable on 16 external interrut vectors"
+- "Almost all 5V-tolerant" (won't affect other ports when < 5V)
+
+### Debugging
+- SWD
+- JTAG
+
+### Timer
+- "Three 16-bit timers each with IC/OC/PWM or pulse counter"
+> 1. Counter mode
+> 2. External Input Counter mode
+> 3. PWM (e.g. controlling motor, LED dimming etc.)
+
+- "2 watchdog timers (independent)":
+> The CPU have to "feed the dog" periodically. If the CPU died, the watchdog will send alarm.
+
+### Communication Interfaces
+- I2C interfaces "(SMBus/PMBus)"
+- USARTs "(ISO7816 interface, LIN, IrDA capability, modem control)"
+- SPIs "(18 Mbit/s)"
+- CAN "(2.0B Active)"
+- USB 2.0
+
+
+## Summary of this EP.
+Each word contains a ton of hardware knowledges. We have to learn while going through the datasheet.
+
+It ***IS*** very time consuming. Skip when some terminology seems useless.
+
+Keep up our hard work! :D
+
+
+
+*******
+
+
+
+ 
+
