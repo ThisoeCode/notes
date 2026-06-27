@@ -45,7 +45,12 @@ _[<< Back to Thisoe's Note](./README.md)_
   - [Clock hardware](#clock)
   - [About ADC](#adc)
 
-- 15 ~ 16\. How to use Multimeter & Oscilloscope
+- 15 ~ 17\. How to use Multimeter & Oscilloscope
+
+- [18.\ Open the project package](#ep18-oj-store-project-package)
+
+- [19.\ `prinf()` from UART](#ep19-prinf-from-uart)
+
 
 
 
@@ -862,8 +867,47 @@ Keep up our hard work! :D
 
 
 *******
+# Ep.15 ~ 17 Multimeter & Oscilloscope
+*******
 
 
 
- 
+# [Ep.18](https://youtu.be/C05tHYzWbyM) OJ Store Project Package
+
+## Components of the package
+
+### For the Project
+- a breadboard
+- 4-pin buttons
+- a switch
+- leds
+- resistors
+- a variable resistor
+- transistors
+- pin
+- a condenser (冷凝器)
+- wire solders (without soldering iron (인두))
+- a 5V-220V relay
+- a UART to USB board
+- a 7-seg 4-digit number display
+- a temperature sensor with 
+- jumper wires
+- plug adapter (돼지코 콘센트) & wires
+
+### For Learning
+- I2C typed LCD display
+- SPI typed SD card reader
+
+
+
+*******
+
+
+
+# [Ep.19](https://youtu.be/aU9PTPCfnMI) `prinf()` from UART
+
+
+
+*******
+
 
